@@ -1,0 +1,22 @@
+---- solve problem 0----
+error: can't find node_module/react-native-fbsdk 
+// turtorial have wrong react-native install react-native-fbsdk is not valid command line
+
+npm i -S react-native-fbsdk
+react-native link react-native-fbsdk
+
+---- solve problem 1---
+// can't find index.android.js in any entry root
+
+npm start -- -reset-cache
+react-native run react-android
+
+---- extern ----
+show debug.keystore key for windows
+
+keytool -exportcert -alias androiddebugkey -keystore %HOMEPATH%\.android\debug.keystore | openssl sha1 -binary | openssl base64
+
+---- extern ----
+clean npm cache 
+
+npm cache clean
