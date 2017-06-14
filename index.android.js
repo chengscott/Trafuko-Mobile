@@ -12,20 +12,32 @@ import {
   View
 } from 'react-native';
 
+import { 
+  LoginButton,
+  AccessToken
+} from 'react-native-fbsdk';
 export default class TrafukoApp extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
+        <LoginButton
+          publishPermissions={["publish_actions"]}
+          onLoginFinished={
+            (error, result) => {
+              if (error) {
+                alert("login has error: " + result.error);
+              } else if (result.isCancelled) {
+                alert("login is cancelled.");
+              } else {
+                AccessToken.getCurrentAccessToken().then(
+                  (data) => {
+                    alert(data.accessToken.toString())
+                  }
+                )
+              }
+            }
+          }
+          onLogoutFinished={() => alert("logout.")}/>
       </View>
     );
   }
