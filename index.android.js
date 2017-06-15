@@ -16,7 +16,7 @@ import {
   LoginButton,
   AccessToken
 } from 'react-native-fbsdk';
-export default class TrafukoApp extends Component {
+export default class Trafuko extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('TrafukoApp', () => TrafukoApp);
+AppRegistry.registerComponent('Trafuko', () => Trafuko);

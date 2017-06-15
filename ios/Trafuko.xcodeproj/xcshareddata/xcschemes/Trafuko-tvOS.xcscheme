@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "TrafukoApp-tvOS.app"
-               BlueprintName = "TrafukoApp-tvOS"
-               ReferencedContainer = "container:TrafukoApp.xcodeproj">
+               BuildableName = "Trafuko-tvOS.app"
+               BlueprintName = "Trafuko-tvOS"
+               ReferencedContainer = "container:Trafuko.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "TrafukoApp-tvOSTests.xctest"
-               BlueprintName = "TrafukoApp-tvOSTests"
-               ReferencedContainer = "container:TrafukoApp.xcodeproj">
+               BuildableName = "Trafuko-tvOSTests.xctest"
+               BlueprintName = "Trafuko-tvOSTests"
+               ReferencedContainer = "container:Trafuko.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "TrafukoApp-tvOSTests.xctest"
-               BlueprintName = "TrafukoApp-tvOSTests"
-               ReferencedContainer = "container:TrafukoApp.xcodeproj">
+               BuildableName = "Trafuko-tvOSTests.xctest"
+               BlueprintName = "Trafuko-tvOSTests"
+               ReferencedContainer = "container:Trafuko.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "TrafukoApp-tvOS.app"
-            BlueprintName = "TrafukoApp-tvOS"
-            ReferencedContainer = "container:TrafukoApp.xcodeproj">
+            BuildableName = "Trafuko-tvOS.app"
+            BlueprintName = "Trafuko-tvOS"
+            ReferencedContainer = "container:Trafuko.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "TrafukoApp-tvOS.app"
-            BlueprintName = "TrafukoApp-tvOS"
-            ReferencedContainer = "container:TrafukoApp.xcodeproj">
+            BuildableName = "Trafuko-tvOS.app"
+            BlueprintName = "Trafuko-tvOS"
+            ReferencedContainer = "container:Trafuko.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "TrafukoApp-tvOS.app"
-            BlueprintName = "TrafukoApp-tvOS"
-            ReferencedContainer = "container:TrafukoApp.xcodeproj">
+            BuildableName = "Trafuko-tvOS.app"
+            BlueprintName = "Trafuko-tvOS"
+            ReferencedContainer = "container:Trafuko.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
