@@ -5,7 +5,7 @@ error: can't find node_module/react-native-fbsdk
 npm i -S react-native-fbsdk
 react-native link react-native-fbsdk
 
----- solve problem 1---
+---- solve problem 1----
 // can't find index.android.js in any entry root
 
 npm start -- -reset-cache
@@ -20,3 +20,13 @@ keytool -exportcert -alias androiddebugkey -keystore %HOMEPATH%\.android\debug.k
 clean npm cache 
 
 npm cache clean
+
+---- try(some times works) ----
+react-native link
+---- try(some times works) ---- 
+java.io.IOException: Could not delete path
+
+1.cd andriod && gradlew clean
+2.uninstall app in avd
+3.close any possible file handler
+
