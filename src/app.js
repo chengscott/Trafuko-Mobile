@@ -10,6 +10,7 @@ import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
 import {Provider, connect} from 'react-redux';
 
+import * as firebase from "firebase";
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import {
   StyleSheet,
@@ -17,8 +18,30 @@ import {
   View
 } from 'react-native';
 import {LoginButton, AccessToken} from 'react-native-fbsdk';
+const config = {
+    apiKey: "AIzaSyDUfoL0DdG_VDo5ijtZRqvVACwXQMARZrc",
+    authDomain: "test-efd03.firebaseapp.com",
+    databaseURL: "https://test-efd03.firebaseio.com",
+    storageBucket: "test-efd03.appspot.com",
+};
+const fb = firebase.initializeApp(config).database();
 
 export default class App extends Component {
+
+  constructor(props) {
+      super(props);
+      this.state = {
+          data: "no-data"
+      };
+
+  }
+  componentDidMount() {
+      fb.ref('posts').on('value', snapshot => {
+          this.setState({
+              data: "have-data"
+          });
+      });
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -40,6 +63,7 @@ export default class App extends Component {
             }
           }
           onLogoutFinished={() => alert("logout.")}/>
+          <Text >{this.state.data}</Text>
       </View>
     );
   }
