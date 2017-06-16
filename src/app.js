@@ -4,20 +4,21 @@
  * @flow
  */
 import React, { Component } from 'react';
+import {BackHandler} from 'react-native';
+
 import {StyleProvider} from 'native-base';
+import getTheme from '../native-base-theme/components';
+import platform from '../native-base-theme/variables/platform';
+
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
 import {Provider, connect} from 'react-redux';
 
-import * as firebase from "firebase";
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
-import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-import {LoginButton, AccessToken} from 'react-native-fbsdk';
+import {StyleSheet, Text, View} from 'react-native';
+
+import * as firebase from "firebase";
 const config = {
     apiKey: "AIzaSyDUfoL0DdG_VDo5ijtZRqvVACwXQMARZrc",
     authDomain: "test-efd03.firebaseapp.com",
@@ -26,65 +27,65 @@ const config = {
 };
 const fb = firebase.initializeApp(config).database();
 
-export default class App extends Component {
+import MainScreen from './components/MainScreen';
+import FavScreen from './components/FavScreen';
+import VRScreen from './components/VRScreen';
 
-  constructor(props) {
-      super(props);
-      this.state = {
-          data: "no-data"
-      };
+const AppNavigator = StackNavigator({
+    Main: {screen: MainScreen},
+    Fav: {screen: FavScreen},
+    VR: {screen: VRScreen}
+}, {
+    headerMode: 'none'
+});
+class AppWithStyleAndNavigator extends React.Component {
+    render() {
+        return (
+            <StyleProvider style={getTheme(platform)}>
+                <AppNavigator navigation={addNavigationHelpers({
+                    dispatch: this.props.dispatch,
+                    state: this.props.nav
+                })}/>
+            </StyleProvider>
+        );
+    }
 
-  }
-  componentDidMount() {
-      fb.ref('posts').on('value', snapshot => {
-          this.setState({
-              data: "have-data"
-          });
-      });
-  }
-  render() {
-    return (
-      <View style={styles.container}>
-        <LoginButton
-          publishPermissions={["publish_actions"]}
-          onLoginFinished={
-            (error, result) => {
-              if (error) {
-                alert("login has error: " + result.error);
-              } else if (result.isCancelled) {
-                alert("login is cancelled.");
-              } else {
-                AccessToken.getCurrentAccessToken().then(
-                  (data) => {
-                    alert(data.accessToken.toString())
-                  }
-                )
-              }
-            }
-          }
-          onLogoutFinished={() => alert("logout.")}/>
-          <Text >{this.state.data}</Text>
-      </View>
-    );
-  }
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            const {dispatch, nav} = this.props;
+            if (nav.index === 0)
+                return false;
+            dispatch(NavigationActions.back())
+            return true;
+        });
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress');
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+const AppWithNavState = connect(state => ({
+    nav: state.nav
+}))(AppWithStyleAndNavigator);
 
+// Nav reducer
+const initialState = AppNavigator.router.getStateForAction(NavigationActions.navigate({routeName: 'Today'}));
+const nav = (state = initialState, action) => {
+    const nextState = AppNavigator.router.getStateForAction(action, state);
+    return nextState || state;
+};
+
+const store = createStore(combineReducers({
+    nav
+}), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
+
+export default class App extends Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <AppWithNavState/>
+            </Provider>
+        );
+    }
+}

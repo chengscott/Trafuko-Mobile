@@ -30,3 +30,15 @@ java.io.IOException: Could not delete path
 2.uninstall app in avd
 3.close any possible file handler
 
+---- some 5.0+ device seeting ----
+classpath 'com.android.tools.build:gradle:1.2.3' (project/build.gradle
+distributionUrl=https://services.gradle.org/distributions/gradle-2.2-all.zip (android/gradle/**.properity)
+
+---- origional setting ----
+classpath 'com.android.tools.build:gradle:2.2.3' (project/build.gradle
+distributionUrl=https\://services.gradle.org/distributions/gradle-2.14.1-all.zip (android/gradle/**.properity)
+
+
+---- for real device dug ----
+adb reverse tcp:8081 tcp:8081
+react-native run-android
