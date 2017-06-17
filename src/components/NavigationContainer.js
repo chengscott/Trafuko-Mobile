@@ -1,10 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+    Container,
+    Header,
+    Button,
+    Icon,
+    Left,
+    Right,
+    Body,
+    Title,
+    Drawer
+} from 'native-base';
 
-import {Container, Header, Button, Icon, Left, Right, Body, Title, Drawer} from 'native-base';
 import DrawerSideBar from './DrawerSideBar';
 
 export default class NavigationContainer extends React.Component {
+
     static propTypes = {
         navigate: PropTypes.func.isRequired,
         title: PropTypes.string.isRequired
@@ -12,8 +23,6 @@ export default class NavigationContainer extends React.Component {
 
     constructor(props) {
         super(props);
-
-
         this.openDrawer = this.openDrawer.bind(this);
         this.closeDrawer = this.closeDrawer.bind(this);
     }

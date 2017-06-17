@@ -11,7 +11,7 @@ export default class LoadAnimation extends React.Component {
     componentDidMount() {
 
     }
-    
+
     render() {
         return (
             <View>
@@ -19,6 +19,4 @@ export default class LoadAnimation extends React.Component {
             </View>
         );
     }
-
 }
-

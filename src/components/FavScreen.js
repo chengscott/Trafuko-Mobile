@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View, Text, Button} from 'react-native';
-
 import {connect} from 'react-redux';
+
 import NavigationContainer from './NavigationContainer';
 
 class FavScreen extends React.Component {
+
     static propTypes = {
         navigation: PropTypes.object.isRequired,
         dispatch: PropTypes.func.isRequired
@@ -13,7 +14,6 @@ class FavScreen extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.handleGoBack = this.handleGoBack.bind(this);
     }
 
@@ -21,12 +21,7 @@ class FavScreen extends React.Component {
 
     }
 
-    componentWillReceiveProps(nextProps) {
-        
-    }
-
     render() {
-
         const {navigate} = this.props.navigation;
         return (
             <NavigationContainer navigate={navigate} title='Fav'>
@@ -39,9 +34,8 @@ class FavScreen extends React.Component {
     }
 
     handleGoBack() {
-         this.props.navigation.goBack();
+        this.props.navigation.goBack();
     }
-    
 }
 
 export default connect((state, ownProps) => ({
@@ -49,12 +43,10 @@ export default connect((state, ownProps) => ({
 }))(FavScreen);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  }
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    }
 });
-
-            
