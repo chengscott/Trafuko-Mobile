@@ -13,6 +13,7 @@ class VRScreen extends React.Component {
     constructor(props) {
         super(props);
         this.handleGoBack = this.handleGoBack.bind(this);
+        this.handleGoFav = this.handleGoBack.bind(this);
     }
 
     componentDidMount() {
@@ -24,12 +25,17 @@ class VRScreen extends React.Component {
             <View style={styles.container}>
                 <Text>{"Welcome to VRScreen"}</Text>
                 <Button title="Go back" onPress={()=>this.handleGoBack()}/>
+                <Button title="Go Fav" onPress={()=>this.handleGoFav()}/>
             </View>
         );
     }
 
     handleGoBack() {
         this.props.navigation.goBack();
+    }
+
+    handleGoFav() {
+        this.props.navigation.navigate('Fav');
     }
 }
 

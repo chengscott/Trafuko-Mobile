@@ -1,6 +1,8 @@
 ### Software Studio
 # Trafuko | 垃圾話
 
+[![gradle](https://img.shields.io/badge/gradle-1.2.3-orange.svg)](https://gradle.org/)
+[![android-sdk](https://img.shields.io/badge/android%20sdk-24-brightgreen.svg)](https://developer.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ## Prerequisites
 
