@@ -78,12 +78,10 @@ const AppNavigator = StackNavigator({
 
 // Nav reducer
 const initialNavState = AppNavigator.router.getStateForAction(
-    AppNavigator.router.getActionForPathAndParams('Main')
+    MainNavigator.router.getActionForPathAndParams('Card')
 );
 const navReducer = (state = initialNavState, action) => {
-    const nextState = AppNavigator.router.getStateForAction(
-        action//, state
-    );
+    const nextState = AppNavigator.router.getStateForAction(action, state);
     return nextState || state;
 };
 
@@ -97,7 +95,7 @@ class AppWithStyleAndNavigator extends React.Component {
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', () => {
             const {dispatch, nav} = this.props;
-            if (nav.index === 0) return false;
+            if (nav.index === 0 && nav.routes[0].index === 0) return false;
             dispatch(NavigationActions.back());
             return true;
         });
