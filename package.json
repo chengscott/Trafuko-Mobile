@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "start": "node node_modules/react-native/local-cli/cli.js start",
+        "android": "node node_modules/react-native/local-cli/cli.js run-android",
         "test": "jest"
     },
     "dependencies": {
@@ -14,6 +15,7 @@
         "react-native": "0.45.1",
         "react-native-fbsdk": "^0.6.0",
         "react-native-vector-icons": "^4.1.1",
+        "react-native-swipe-cards": "^0.1.0",
         "react-navigation": "^1.0.0-beta.9",
         "react-redux": "^5.0.5",
         "redux": "^3.6.0",
