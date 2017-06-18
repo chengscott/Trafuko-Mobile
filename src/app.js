@@ -15,7 +15,10 @@ import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 import * as firebase from "firebase";
 
+
+import {user} from './states/user-reducers';
 import CardScreen from './components/CardScreen';
+
 import FavScreen from './components/FavScreen';
 import VRScreen from './components/VRScreen';
 
@@ -25,7 +28,7 @@ const config = {
     databaseURL: "https://test-efd03.firebaseio.com",
     storageBucket: "test-efd03.appspot.com",
 };
-const fb = firebase.initializeApp(config).database();
+const firebaseApp = firebase.initializeApp(config);
 
 const MainNavigator = TabNavigator({
     Card: {
@@ -101,15 +104,26 @@ const AppWithNavState = connect(state => ({
     nav: state.navReducer
 }))(AppWithStyleAndNavigator);
 
+
+// Firebase reducer
+const initialFbState = {
+    firebase:undefined
+};
+const fb = (state = initialFbState, action) => {
+    if(firebaseApp !== undefined) {
+        return {firebase: firebase};
+    } else return {...state};
+}
+
 const store = createStore(combineReducers({
-    navReducer
+    navReducer, fb, user
 }), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
 
 export default class App extends React.Component {
     render() {
         return (
             <Provider store={store}>
-                <AppWithNavState />
+                <AppWithNavState/>
             </Provider>
         );
     }
