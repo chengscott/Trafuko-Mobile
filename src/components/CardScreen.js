@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {StyleSheet, View, Text, Button} from 'react-native';
 import {connect} from 'react-redux';
 
-class VRScreen extends React.Component {
+class CardScreen extends React.Component {
 
     static propTypes = {
         navigation: PropTypes.object.isRequired,
@@ -12,8 +12,7 @@ class VRScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleGoBack = this.handleGoBack.bind(this);
-        this.handleGoFav = this.handleGoBack.bind(this);
+        this.handleGoVR = this.handleGoVR.bind(this);
     }
 
     componentDidMount() {
@@ -23,25 +22,20 @@ class VRScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>{"Welcome to VRScreen"}</Text>
-                <Button title="Go back" onPress={()=>this.handleGoBack()}/>
-                <Button title="Go Fav" onPress={()=>this.handleGoFav()}/>
+                <Text>{"Welcome to CardScreen"}</Text>
+                <Button title="Go VR" onPress={()=>this.handleGoVR()}/>
             </View>
         );
     }
 
-    handleGoBack() {
-        this.props.navigation.goBack();
-    }
-
-    handleGoFav() {
-        this.props.navigation.navigate('Fav');
+    handleGoVR() {
+        this.props.navigation.navigate('VR');
     }
 }
 
 export default connect((state, ownProps) => ({
     ...state
-}))(VRScreen);
+}))(CardScreen);
 
 const styles = StyleSheet.create({
     container: {
