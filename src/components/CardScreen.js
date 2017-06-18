@@ -63,9 +63,14 @@ class CardScreen extends React.Component {
                   renderNoMoreCards={() => <NoMoreCards />}
                   showYup={false}
                   showNope={false}
-                  stack={true}
+                  showMaybe={false}
+                  hasMaybeAction={true}
                   maybeText="aaaaaaaa"
+                  cardKey="swcard"
+                  onClickHandler={this.onClick}
+
                   smoothTransition={true}
+                  stack={true}
                   stackOffsetX={10}
                   stackOffsetY={-10}
                 />
@@ -94,6 +99,10 @@ class CardScreen extends React.Component {
 
     handleUnlike() {
 
+    }
+
+    onClick() {
+        
     }
 
     handleGoVR() {
@@ -151,7 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 3,
     borderColor:"#e1e1e1",
-    marginTop: 45,
+    marginTop: 37,
     marginLeft: 22,
     zIndex: 0
   },
@@ -190,7 +199,7 @@ const styles = StyleSheet.create({
   voteBtn: {
     height: 70,
     width: screenWidth,
-    top: screenHeight - 250,
+    top: screenHeight - 258,
     left: 0,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -200,7 +209,7 @@ const styles = StyleSheet.create({
   VRbtnBox: {
     height: 90,
     width: screenWidth,
-    top: screenHeight - 170,
+    top: screenHeight - 208,
     left: 0,
     flexDirection: 'row',
     justifyContent: 'flex-end', 
