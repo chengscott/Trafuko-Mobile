@@ -1,4 +1,4 @@
-export default appColors = {
+const appColors = {
     primary: '#31b0d5',
     primaryBorder: '#2aabd2',
     primaryText: '#fff',
@@ -15,3 +15,5 @@ export default appColors = {
     textLight: '#bcbcbc',
     mask: 'rgba(0, 0, 0, 0.5)'
 };
+
+export default appColors;

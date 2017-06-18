@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {View, StyleSheet, Text, Platform} from 'react-native';
+import {ListItem, Icon} from 'native-base';
+
+import appColors from '../styles/colors';
 
 import {deleteFav} from '../states/fav-actions';
 
-import {ListItem, Icon} from 'native-base';
-import appColors from '../styles/colors';
-
 export default class FavItem extends React.Component {
+
     static propTypes = {
         id: PropTypes.number.isRequired,
         text: PropTypes.string.isRequired,
@@ -18,13 +19,11 @@ export default class FavItem extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.handleDeleteFav = this.handleDeleteFav.bind(this);
     }
 
     render() {
         const {id, text, ts, color} = this.props;
-
         return (
             <ListItem onPress={()=> this.handleDeleteFav(this.props.id)} style={StyleSheet.flatten(styles.listItem)}>
                 <View style={styles.fav}>
@@ -36,9 +35,9 @@ export default class FavItem extends React.Component {
         );
     }
 
-   handleDeleteFav(id){
+    handleDeleteFav(id) {
         this.props.dispatch(deleteFav(id));
-   }
+    }
 }
 
 /*

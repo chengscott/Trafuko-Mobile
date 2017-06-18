@@ -1,17 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    View,
-    ListView, RefreshControl
-} from 'react-native';
+import {View, ListView, RefreshControl} from 'react-native';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
+import {connect} from 'react-redux';
 
 import FavItem from './FavItem';
 
-import {connect} from 'react-redux';
 import {listFavs, listMoreFavs} from '../states/fav-actions';
 
 class FavList extends React.Component {
+
     static propTypes = {
         searchText: PropTypes.string,
         listingFavs: PropTypes.bool.isRequired,
