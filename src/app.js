@@ -1,5 +1,6 @@
 import React from 'react';
-import {BackHandler, StyleSheet, Text, View} from 'react-native';
+import PropTypes from 'prop-types';
+import {BackHandler} from 'react-native';
 import {
     TabNavigator,
     StackNavigator,
@@ -15,9 +16,12 @@ import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 import * as firebase from "firebase";
 
+import {user} from './states/user-reducers';
 import CardScreen from './components/CardScreen';
 import FavScreen from './components/FavScreen';
 import VRScreen from './components/VRScreen';
+
+/* Firebase */
 
 const config = {
     apiKey: "AIzaSyDUfoL0DdG_VDo5ijtZRqvVACwXQMARZrc",
@@ -25,7 +29,20 @@ const config = {
     databaseURL: "https://test-efd03.firebaseio.com",
     storageBucket: "test-efd03.appspot.com",
 };
-const fb = firebase.initializeApp(config).database();
+const firebaseApp = firebase.initializeApp(config);
+
+// Firebase reducer
+const initialFbState = {
+    firebase: undefined
+};
+const fb = (state = initialFbState, action) => {
+    if (firebaseApp !== undefined) {
+        return {firebase: firebase};
+    }
+    return {...state};
+};
+
+/* Navigator */
 
 const MainNavigator = TabNavigator({
     Card: {
@@ -48,30 +65,38 @@ const AppNavigator = StackNavigator({
     Main: {screen: MainNavigator},
     VR: {screen: VRScreen}
 }, {
-    headerMode: 'none',
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: '#1976D2',
+        },
+        headerTitleStyle: {
+            color: '#fff',
+        },
+        title: 'Trafuko',
+    }
 });
 
 // Nav reducer
-const initialState = AppNavigator.router.getStateForAction(
-    AppNavigator.router.getActionForPathAndParams('Main')
+const initialNavState = AppNavigator.router.getStateForAction(
+    MainNavigator.router.getActionForPathAndParams('Card')
 );
-const navReducer = (state = initialState, action) => {
-    //const nextState = AppNavigator.router.getStateForAction(action, state);
-    const nextState = AppNavigator.router.getStateForAction(
-        (action.type == 'Main') ?
-            AppNavigator.router.getActionForPathAndParams('Main') :
-            action
-    );
+const navReducer = (state = initialNavState, action) => {
+    const nextState = AppNavigator.router.getStateForAction(action, state);
     return nextState || state;
 };
 
 class AppWithStyleAndNavigator extends React.Component {
 
+    static propTypes = {
+        nav: PropTypes.object.isRequired,
+        dispatch: PropTypes.func.isRequired
+    };
+
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', () => {
             const {dispatch, nav} = this.props;
-            if (nav.index === 0) return false;
-            dispatch(NavigationActions.back())
+            if (nav.index === 0 && nav.routes[0].index === 0) return false;
+            dispatch(NavigationActions.back());
             return true;
         });
     }
@@ -84,9 +109,9 @@ class AppWithStyleAndNavigator extends React.Component {
         return (
             <StyleProvider style={getTheme(platform)}>
                 <AppNavigator navigation={addNavigationHelpers({
-                        dispatch: this.props.dispatch,
-                        state: this.props.nav
-                    })}/>
+                    dispatch: this.props.dispatch,
+                    state: this.props.nav
+                })}/>
             </StyleProvider>
         );
     }
@@ -97,7 +122,7 @@ const AppWithNavState = connect(state => ({
 }))(AppWithStyleAndNavigator);
 
 const store = createStore(combineReducers({
-    navReducer
+    navReducer, fb, user
 }), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
 
 export default class App extends React.Component {
