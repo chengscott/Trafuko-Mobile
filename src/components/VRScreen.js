@@ -13,7 +13,7 @@ class VRScreen extends React.Component {
     constructor(props) {
         super(props);
         this.handleGoBack = this.handleGoBack.bind(this);
-        this.handleGoFav = this.handleGoBack.bind(this);
+        this.handleGoFav = this.handleGoFav.bind(this);
     }
 
     componentDidMount() {

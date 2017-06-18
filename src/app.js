@@ -48,7 +48,15 @@ const AppNavigator = StackNavigator({
     Main: {screen: MainNavigator},
     VR: {screen: VRScreen}
 }, {
-    headerMode: 'none',
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: '#1976D2',
+        },
+        headerTitleStyle: {
+            color: '#fff',
+        },
+        title: 'Trafuko',
+    }
 });
 
 // Nav reducer
@@ -56,11 +64,8 @@ const initialState = AppNavigator.router.getStateForAction(
     AppNavigator.router.getActionForPathAndParams('Main')
 );
 const navReducer = (state = initialState, action) => {
-    //const nextState = AppNavigator.router.getStateForAction(action, state);
     const nextState = AppNavigator.router.getStateForAction(
-        (action.type == 'Main') ?
-            AppNavigator.router.getActionForPathAndParams('Main') :
-            action
+        action//, state
     );
     return nextState || state;
 };
