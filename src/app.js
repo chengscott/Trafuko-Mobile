@@ -10,6 +10,8 @@ import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 import * as firebase from "firebase";
 
+import {user} from './states/user-reducers';
+
 import MainScreen from './components/MainScreen';
 import FavScreen from './components/FavScreen';
 import VRScreen from './components/VRScreen';
@@ -20,7 +22,7 @@ const config = {
     databaseURL: "https://test-efd03.firebaseio.com",
     storageBucket: "test-efd03.appspot.com",
 };
-const fb = firebase.initializeApp(config).database();
+const firebaseApp = firebase.initializeApp(config);
 
 const AppNavigator = StackNavigator({
     Main: {screen: MainScreen},
@@ -68,15 +70,25 @@ const nav = (state = initialState, action) => {
     return nextState || state;
 };
 
+// Firebase reducer
+const initialFbState = {
+    firebase:undefined
+};
+const fb = (state = initialFbState, action) => {
+    if(firebaseApp !== undefined) {
+        return {firebase: firebase};
+    } else return {...state};
+}
+
 const store = createStore(combineReducers({
-    nav
+    nav, fb, user
 }), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
 
 export default class App extends Component {
     render() {
         return (
             <Provider store={store}>
-                <AppWithNavState />
+                <AppWithNavState/>
             </Provider>
         );
     }

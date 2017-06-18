@@ -1,14 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, View, Button} from 'react-native';
+import {Icon} from 'native-base';
 import {connect} from 'react-redux';
 import {LoginButton, AccessToken} from 'react-native-fbsdk';
 
 import NavigationContainer from './NavigationContainer';
+import {setUserID} from '../states/user-actions';
 
 class MainScreen extends React.Component {
 
     static propTypes = {
+        UuerID: PropTypes.string.isRequired,
         dispatch: PropTypes.func.isRequired
     };
 
@@ -19,7 +22,7 @@ class MainScreen extends React.Component {
     }
 
     componentDidMount() {
-
+        //const {firebase} = this.props.fb;
     }
 
     render() {
@@ -27,8 +30,9 @@ class MainScreen extends React.Component {
         return (
             <NavigationContainer navigate={navigate} title='Main'>
                 <View style={styles.container}>
+                    <Icon name="home"/>
                     <LoginButton
-                        publishPermissions={["publish_actions"]}
+                        publishPermissions={["publish_actions,email"]}
                         onLoginFinished={
                             (error, result) => {
                                 if (error) {
@@ -37,10 +41,24 @@ class MainScreen extends React.Component {
                                     alert("login is cancelled.");
                                 } else {
                                     AccessToken.getCurrentAccessToken().then(
-                                        (data) => {
-                                            alert(data.accessToken.toString())
-                                        }
-                                    )
+                                    (data) => {
+                                        const {firebase} = this.props.fb;
+                                        const credential =  firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+                                        firebase.auth().signInWithCredential(credential).then((result) => {
+                                            this.props.dispatch(setUserID(result.uid));
+                                            alert("success");
+                                        }).catch((error) => {
+                                            // The firebase.auth.AuthCredential type that was used.
+                                            const errInfo = {
+                                                errorCode: error.code,
+                                                errorMessage: error.message,
+                                                email: error.email,
+                                                credential: error.credential
+                                            };
+                                            console.log(errInfo);
+                                            alert("error");
+                                        });
+                                    });
                                 }
                             }
                         }
@@ -83,3 +101,11 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     }
 });
+
+function objToarr(obj) {
+    let arr = [];
+    for (let x in obj) {
+        arr.push(obj[x]);
+    }
+    return arr;
+}
