@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {BackHandler} from 'react-native';
+import {Alert, BackHandler} from 'react-native';
 import {
     TabNavigator,
     StackNavigator,
@@ -11,7 +11,7 @@ import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
 import {Provider, connect} from 'react-redux';
-import {StyleProvider, Icon} from 'native-base';
+import {StyleProvider, Button, Icon} from 'native-base';
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 import * as firebase from "firebase";
@@ -50,21 +50,33 @@ const MainNavigator = TabNavigator({
         screen: CardScreen,
         navigationOptions: {
             tabBarLabel: '幹話卡',
-            tabBarIcon: ({focused, tintColor}) => <Icon name="albums" style={{color: '#fff'}}/>,
+            tabBarIcon: ({tintColor}) => <Icon name="albums" style={{fontSize: 25, color: tintColor}}/>,
         },
     },
     Fav: {
         screen: FavScreen,
         navigationOptions: {
             tabBarLabel: '收藏',
-            tabBarIcon: ({focused, tintColor}) => (<Icon name="bookmark" style={{color: '#fff'}}/>),
+            tabBarIcon: ({tintColor}) => (<Icon name="bookmark" style={{fontSize: 25, color: tintColor}}/>),
         },
     },
 }, {
     tabBarPosition: 'bottom',
     tabBarOptions: {
-        showLabel: false,
+        showLabel: true,
         showIcon: true,
+        labelStyle: {
+            marginTop: 1.2,
+            marginBottom: 0,
+        },
+        inactiveTintColor: '#37474f',
+        activeTintColor: '#039BE5',
+        style: {
+            backgroundColor: '#fff',
+        },
+        indicatorStyle: {
+            backgroundColor: '#006DB3',
+        },
     }
 });
 
@@ -80,6 +92,9 @@ const AppNavigator = StackNavigator({
             color: '#fff',
         },
         title: 'Trafuko',
+        headerRight: (
+            <Icon name='more' style={{color: '#fff', paddingRight: 25}} />
+        ),
     }
 });
 
@@ -102,7 +117,16 @@ class AppWithStyleAndNavigator extends React.Component {
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', () => {
             const {dispatch, nav} = this.props;
-            if (nav.index === 0 && nav.routes[0].index === 0) return false;
+            if (nav.index === 0 && nav.routes[0].index === 0) {
+                Alert.alert(
+                    '講幹話？Trafuko',
+                    '您確定要離開應用程式？',
+                    [
+                        {text: '取消', style: 'cancel'},
+                        {text: '確認', onPress: () => BackHandler.exitApp()},
+                    ]
+                );
+            }
             dispatch(NavigationActions.back());
             return true;
         });
