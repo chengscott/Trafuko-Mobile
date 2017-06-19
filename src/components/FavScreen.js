@@ -32,50 +32,48 @@ class FavScreen extends React.Component {
 
     render() {
         return (
-            // <View style={styles.container}>
-            //     <Text>{"Welcome to FavScreen"}</Text>
-            //     <Button title="Go back" onPress={()=>this.handleGoBack()}/>
-            //     <LoginButton
-            //         publishPermissions={["publish_actions,email"]}
-            //         onLoginFinished={
-            //             (error, result) => {
-            //                 if (error) {
-            //                     alert("login has error: " + result.error);
-            //                 } else if (result.isCancelled) {
-            //                     alert("login is cancelled.");
-            //                 } else {
-            //                     AccessToken.getCurrentAccessToken().then(
-            //                         (data) => {
-            //                             const {firebase} = this.props.fb;
-            //                             const credential =  firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-            //                             firebase.auth().signInWithCredential(credential).then((result) => {
-            //                                 this.props.dispatch(setUserID(result.uid));
-            //                                 alert("success");
-            //                             }).catch((error) => {
-            //                             // The firebase.auth.AuthCredential type that was used.
-            //                                 const errInfo = {
-            //                                     errorCode: error.code,
-            //                                     errorMessage: error.message,
-            //                                     email: error.email,
-            //                                     credential: error.credential
-            //                                 };
-            //                                 console.log(errInfo);
-            //                                 alert("error");
-            //                             });
-            //                         });
-            //                 }
-            //             }
-            //         }
-            //         onLogoutFinished={() => {
-            //             this.props.firebase.auth().signOut().then(() => {
-            //                 alert("logout.");
-            //             }).catch((error) => {
-            //                 alert("logout error.");
-            //             });
-            //         }}/>
-            //     <FavList/>
-            // </View>
-            <FavList/>
+            <View>
+                <LoginButton
+                    publishPermissions={["publish_actions,email"]}
+                    onLoginFinished={
+                        (error, result) => {
+                            if (error) {
+                                alert("login has error: " + result.error);
+                            } else if (result.isCancelled) {
+                                alert("login is cancelled.");
+                            } else {
+                                AccessToken.getCurrentAccessToken().then(
+                                    (data) => {
+                                        const {firebase} = this.props.fb;
+                                        const credential =  firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+                                        firebase.auth().signInWithCredential(credential).then((result) => {
+                                            this.props.dispatch(setUserID(result.uid));
+                                            alert("success");
+                                        }).catch((error) => {
+                                        // The firebase.auth.AuthCredential type that was used.
+                                            const errInfo = {
+                                                errorCode: error.code,
+                                                errorMessage: error.message,
+                                                email: error.email,
+                                                credential: error.credential
+                                            };
+                                            console.log(errInfo);
+                                            alert("error");
+                                        });
+                                    });
+                            }
+                        }
+                    }
+                    onLogoutFinished={() => {
+                        this.props.firebase.auth().signOut().then(()=>{
+                            alert("logout.");
+                            this.props.dispatch(setUserID(undefined));
+                        }).catch(error =>{
+                            alert("Logout error");
+                        });
+                    }}/>
+                <FavList/>
+            </View>
         );
     }
 
