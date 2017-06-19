@@ -50,16 +50,22 @@ const MainNavigator = TabNavigator({
         screen: CardScreen,
         navigationOptions: {
             tabBarLabel: '幹話卡',
-            tabBarIcon: <Icon name="albums" />,
+            tabBarIcon: ({focused, tintColor}) => <Icon name="albums" style={{color: '#fff'}}/>,
         },
     },
     Fav: {
         screen: FavScreen,
         navigationOptions: {
             tabBarLabel: '收藏',
-            tabBarIcon: <Icon name="bookmark" />,
+            tabBarIcon: ({focused, tintColor}) => (<Icon name="bookmark" style={{color: '#fff'}}/>),
         },
     },
+}, {
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+        showLabel: false,
+        showIcon: true,
+    }
 });
 
 const AppNavigator = StackNavigator({
