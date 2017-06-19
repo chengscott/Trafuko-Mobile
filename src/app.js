@@ -17,6 +17,7 @@ import platform from '../native-base-theme/variables/platform';
 import * as firebase from "firebase";
 
 import {user} from './states/user-reducers';
+import {fav} from './states/fav-reducers';
 import CardScreen from './components/CardScreen';
 import FavScreen from './components/FavScreen';
 import VRScreen from './components/VRScreen';
@@ -122,7 +123,7 @@ const AppWithNavState = connect(state => ({
 }))(AppWithStyleAndNavigator);
 
 const store = createStore(combineReducers({
-    navReducer, fb, user
+    navReducer, fb, user, fav
 }), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
 
 export default class App extends React.Component {

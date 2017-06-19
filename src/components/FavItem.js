@@ -2,33 +2,49 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {View, StyleSheet, Text, Platform} from 'react-native';
 import {ListItem, Icon} from 'native-base';
+import {connect} from 'react-redux';
 
 import appColors from '../styles/colors';
 
 import {deleteFav} from '../states/fav-actions';
 
-export default class FavItem extends React.Component {
+class FavItem extends React.Component {
 
     static propTypes = {
-        id: PropTypes.number.isRequired,
-        text: PropTypes.string.isRequired,
-        color: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
         ts: PropTypes.string.isRequired,
+        firebase: PropTypes.object.isRequired,
         dispatch: PropTypes.func.isRequired
     };
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            text: undefined
+        };
+
         this.handleDeleteFav = this.handleDeleteFav.bind(this);
     }
 
+    componentDidMount() {
+        const {id, firebase} = this.props;
+        firebase.database().ref('/posts/' + id).once('value').then( snapshot =>{
+            if(snapshot !== null){
+                this.setState({
+                    text: snapshot.val().text
+                });
+            }
+        });
+    }
     render() {
-        const {id, text, ts, color} = this.props;
+        const {id, ts} = this.props;
         return (
             <ListItem onPress={()=> this.handleDeleteFav(this.props.id)} style={StyleSheet.flatten(styles.listItem)}>
                 <View style={styles.fav}>
                     <View style={styles.wrap}>
-                        <Text style={styles.text}>{text}</Text>
+                        <Text style={styles.ts}>{ts}</Text>
+                        <Text style={styles.text}>{this.state.text}</Text>
                     </View>
                 </View>
             </ListItem>
@@ -39,6 +55,11 @@ export default class FavItem extends React.Component {
         this.props.dispatch(deleteFav(id));
     }
 }
+
+export default connect((state, ownProps) => ({
+    ...state,
+    firebase: state.fb.firebase
+}))(FavItem);
 
 /*
  * When styling a large number of components, use StyleSheet.

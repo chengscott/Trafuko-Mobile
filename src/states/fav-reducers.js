@@ -7,10 +7,24 @@ const initFavState = {
 
 export function fav(state = initFavState, action) {
     switch(action.type) {
-        case '@FAVLIST_LIST':
-            return {...state};
-        case '@FAVLIST_LISTMORE':
-            return {...state};
+        case '@FAV/START_LIST_FAVS':
+            return {
+                ...state,
+                listingFavs: true,
+                listingMoreFavs: undefined
+            };
+        case '@FAV/END_LIST_FAVS':
+            if (!action.favs)
+                return {
+                    ...state,
+                    listingFavs: false
+                };
+            return {
+                ...state,
+                listingFavs: false,
+                favs: action.favs,
+                hasMore: action.favs.length > 0
+            };
         case '@FAVITEM_DELETE':
             return {...state};
         default:

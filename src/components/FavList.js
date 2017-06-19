@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, ListView, RefreshControl} from 'react-native';
+import {ListView, RefreshControl} from 'react-native';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import {connect} from 'react-redux';
 
 import FavItem from './FavItem';
 
+import {setUserID} from '../states/user-actions';
 import {listFavs, listMoreFavs} from '../states/fav-actions';
 
 class FavList extends React.Component {
 
     static propTypes = {
-        searchText: PropTypes.string,
         listingFavs: PropTypes.bool.isRequired,
         listingMoreFavs: PropTypes.oneOfType([
             PropTypes.string,
@@ -20,7 +20,9 @@ class FavList extends React.Component {
         favs: PropTypes.array.isRequired,
         hasMoreFavs: PropTypes.bool.isRequired,
         dispatch: PropTypes.func.isRequired,
-        scrollProps: PropTypes.object
+        scrollProps: PropTypes.object,
+        firebase: PropTypes.object.isRequired,
+        userID: PropTypes.string
     };
 
     constructor(props) {
@@ -37,14 +39,20 @@ class FavList extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(listFavs(/*this.props.searchText*/""));
+        const {firebase} = this.props;
+        if(this.props.userID == undefined){
+            this.props.firebase.auth().onAuthStateChanged((firebaseUser) => {
+                if (firebaseUser) {
+                    this.props.dispatch(setUserID(firebaseUser.uid));
+                    this.props.dispatch(listFavs(firebaseUser.uid,firebase));
+                }
+            });
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        const {searchText, dispatch, favs} = this.props;
-        if (searchText !== nextProps.searchText) {
-            dispatch(listFavs(nextProps.searchText));
-        }
+        const {favs} = this.props;
+
         if (favs !== nextProps.favs) {
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(nextProps.favs)
@@ -65,12 +73,12 @@ class FavList extends React.Component {
                 renderRow={(p) => {
                     return <FavItem {...p} />;
                 }}
-                canLoadMore={() => {
-                    if (listingFavs || !favs.length)
-                        return false;
-                    return hasMoreFavs;
-                }}
-                onLoadMoreAsync={this.handleLoadMore}
+                // canLoadMore={() => {
+                //     if (listingFavs || !favs.length)
+                //         return false;
+                //     return hasMoreFavs;
+                // }}
+                // onLoadMoreAsync={this.handleLoadMore}
                 style={{backgroundColor: '#fff'}}
                 ref={(el) => this.listEl = el}
                 {...scrollProps}
@@ -79,22 +87,24 @@ class FavList extends React.Component {
     }
 
     handleRefresh() {
-        const {dispatch, searchText} = this.props;
-        dispatch(listFavs(searchText));
+        const {dispatch, firebase, userID} = this.props;
+        if(userID !== undefined)
+            dispatch(listFavs(userID,firebase));
     }
 
     handleLoadMore() {
-        const {listingMoreFavs, dispatch, favs, searchText} = this.props;
-        const start = favs[favs.length - 1].id;
-        if (listingMoreFavs !== start)
-            dispatch(listMoreFavs(searchText, start));
+        // const {listingMoreFavs, dispatch, favs, firebase} = this.props;
+        // const start = favs[favs.length - 1].id;
+        // if (listingMoreFavs !== start)
+        //     dispatch(listMoreFavs(this.props.userID,start,firebase));
     }
 }
 
 export default connect((state, ownProps) => ({
-    searchText: state.search.searchText,
     listingFavs: state.fav.listingFavs,
     listingMoreFavs: state.fav.listingMoreFavs,
     favs: state.fav.favs,
-    hasMoreFavs: state.fav.hasMore
+    hasMoreFavs: state.fav.hasMore,
+    firebase: state.fb.firebase,
+    userID: state.user.userID
 }))(FavList);
