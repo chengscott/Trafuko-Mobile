@@ -60,15 +60,18 @@ export function listFavs(favid, firebase) {
                 console.log(err);
                 dispatch(emptyFavList());
             });
-        } else if (isConnected === false) {
-            dispatch(startFavList());
-            fetchDataLocal('localFavs' + favid).then(result => {
-                if (result !== null) {
+        }
+        else if(isConnected === false){
+            fetchDataLocal('localFavs'+favid).then( result => {
+                dispatch(startFavList());
+                if(result !== null){
                     let arr = JSON.parse(result);
                     arr = arraySortByts(arr);
                     dispatch(endFavList(arr));
-                } else dispatch(emptyFavList());
-            }).catch(err => {
+                } else {
+                    dispatch(emptyFavList());
+                }
+            }).catch( err => {
                 console.log(err);
                 dispatch(emptyFavList());
             });

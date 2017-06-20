@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, StyleSheet, Text, Platform} from 'react-native';
+import {View, StyleSheet, Text, Platform, Alert} from 'react-native';
+import FIcon from 'react-native-vector-icons/FontAwesome';
 import {ListItem} from 'native-base';
 import {connect} from 'react-redux';
 import fecha from 'fecha';
@@ -39,10 +40,12 @@ class FavItem extends React.Component {
                     });
                 }
             });
-        } else {
-            this.setState({
-                text: this.props.text
-            });
+        }else {
+            if(this.props.text !== null){
+                this.setState({
+                    text: this.props.text
+                });
+            }
         }
     }
 
@@ -51,11 +54,14 @@ class FavItem extends React.Component {
         const time = new Date(ts);
         const favtime = fecha.format(time, "YYYY-MM-DD");
         return (
-            <ListItem onPress={()=> this.handleDeleteFav(this.props.id,this.state.text)} style={StyleSheet.flatten(styles.listItem)}>
+            <ListItem  style={StyleSheet.flatten(styles.listItem)}>
                 <View style={styles.fav}>
                     <View style={styles.wrap}>
                         <Text style={styles.ts}>{favtime}</Text>
                         <Text style={styles.text}>{this.state.text}</Text>
+                    </View>
+                    <View style={styles.delete}>
+                        <FIcon.Button name="close" onPress={()=>this.handleDeleteFav(this.props.id)}  style={StyleSheet.flatten(styles.deleteIconButton)}/>
                     </View>
                 </View>
             </ListItem>
@@ -64,7 +70,14 @@ class FavItem extends React.Component {
 
     handleDeleteFav(id) {
         const {firebase} = this.props;
-        this.props.dispatch(deleteFav(id, firebase));
+        Alert.alert(
+            '注意',
+            '您確定要刪除此收藏？',
+            [
+                {text: '取消', style: 'cancel'},
+                {text: '確認', onPress: () => this.props.dispatch(deleteFav(id,firebase))},
+            ]
+        );
     }
 }
 
@@ -89,6 +102,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start'
     },
+    delete: {
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        paddingRight: 0
+    },
     wrap: {
         flex: 1
     },
@@ -103,5 +121,10 @@ const styles = StyleSheet.create({
         marginTop: 4,
         marginBottom: 4,
         marginLeft: 8
+    },
+    deleteIconButton: {
+        width: 24,
+        height: 24,
+        top: 0
     }
 });
