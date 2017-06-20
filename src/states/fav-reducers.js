@@ -17,6 +17,7 @@ export function fav(state = initFavState, action) {
             return {
                 ...state,
                 listingFavs: true,
+                emptyState: false,
                 listingMoreFavs: undefined
             };
         case '@FAV/END_LIST_FAVS':

@@ -65,10 +65,8 @@ class CardScreen extends React.Component {
                     showNope={false}
                     showMaybe={false}
                     hasMaybeAction={true}
-                    maybeText="aaaaaaaa"
                     cardKey="swcard"
                     onClickHandler={this.onClick}
-
                     smoothTransition={true}
                     stack={true}
                     stackOffsetX={10}

@@ -38,16 +38,19 @@ class FavList extends React.Component {
         this.handleRefresh = this.handleRefresh.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
+
     componentDidMount() {
-        const {userID,dispatch,firebase} = this.props;
+        const {firebase,dispatch,userID} = this.props;
         dispatch(listFavs(userID,firebase));
     }
 
     componentWillReceiveProps(nextProps) {
-        const {dispatch,firebase,userID,favs} = this.props;
+        const {firebase,dispatch,userID,favs,isConnected} = this.props;
 
-        if(userID !== "" && userID !== nextProps.userID) {
-            dispatch(listFavs(userID,firebase));
+        var flag1 = userID == "" && userID !== nextProps.userID;
+        var flag2 = userID !== "" && isConnected !== nextProps.isConnected && isConnected === false;
+        if(flag1 || flag2){
+            dispatch(listFavs(nextProps.userID,firebase));
         }
         if (favs !== nextProps.favs) {
             this.setState({
