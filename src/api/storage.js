@@ -1,13 +1,12 @@
 import {AsyncStorage} from 'react-native';
 
-export function clearData(favid) {
-    AsyncStorage.removeItem('localFavs'+favid);
+export function clearData(key) {
+    AsyncStorage.removeItem(key);
 }
 
-export function asyncSave(favid, data) {
+export function asyncSave(key, data) {
 
-    console.log(data);
-    AsyncStorage.getItem('localFavs'+favid).then(result => {
+    AsyncStorage.getItem(key).then(result => {
         var arr = [];
         if(result !== null) {
             arr = JSON.parse(result);
@@ -16,11 +15,10 @@ export function asyncSave(favid, data) {
                 else return true;
             });
             arr.push(data);
-            AsyncStorage.setItem('localFavs'+favid,JSON.stringify(arr));
+            AsyncStorage.setItem(key,JSON.stringify(arr));
         }else {
             arr.push(data);
-            alert('localFavs'+favid);
-            AsyncStorage.setItem('localFavs'+favid,JSON.stringify(arr));
+            AsyncStorage.setItem(key,JSON.stringify(arr));
         }
     }).catch( err =>{
         console.log(err);
@@ -28,9 +26,9 @@ export function asyncSave(favid, data) {
 }
 
 
-export function fetchDataLocal(favid) {
+export function fetchDataLocal(key) {
     return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('localFavs' + favid).then( result => {
+        AsyncStorage.getItem(key).then( result => {
             resolve(result);
         }).catch(err => {
             reject(err);
