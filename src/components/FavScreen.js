@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, View, Text, Button, ListView, RefreshControl} from 'react-native';
-import {LoginButton, AccessToken} from 'react-native-fbsdk';
+import {StyleSheet, View, Text} from 'react-native';
+import LoginButton from './FBLoginButton';
 import {connect} from 'react-redux';
-import {setUserID} from '../states/user-actions';
 
 import FavList from './FavList';
 class FavScreen extends React.Component {
 
     static propTypes = {
-        userID: PropTypes.string,
+        userID: PropTypes.string.isRequired,
         firebase: PropTypes.object.isRequired,
         navigation: PropTypes.object.isRequired,
-        dispatch: PropTypes.func.isRequired
+        dispatch: PropTypes.func.isRequired,
+        renderNoFavs: PropTypes.func,
     };
 
     constructor(props) {
@@ -20,61 +20,23 @@ class FavScreen extends React.Component {
         this.handleGoBack = this.handleGoBack.bind(this);
     }
 
-    componentDidMount() {
-        if(this.props.userID == undefined){
-            this.props.firebase.auth().onAuthStateChanged((firebaseUser) => {
-                if (firebaseUser) {
-                    this.props.dispatch(setUserID(firebaseUser.uid));
-                }
-            });
-        }
-    }
-
     render() {
-        return (
+        const renderLoginPage =
+            <View style={styles.container}>
+                <Text>{"Login Page"}</Text>
+                <LoginButton
+                    permissions={['public_profile','email','user_friends']}
+                />
+            </View>;
+
+        const renderFavList =
             <View>
                 <LoginButton
-                    publishPermissions={["publish_actions,email"]}
-                    onLoginFinished={
-                        (error, result) => {
-                            if (error) {
-                                alert("login has error: " + result.error);
-                            } else if (result.isCancelled) {
-                                alert("login is cancelled.");
-                            } else {
-                                AccessToken.getCurrentAccessToken().then(
-                                    (data) => {
-                                        const {firebase} = this.props.fb;
-                                        const credential =  firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-                                        firebase.auth().signInWithCredential(credential).then((result) => {
-                                            this.props.dispatch(setUserID(result.uid));
-                                            alert("success");
-                                        }).catch((error) => {
-                                        // The firebase.auth.AuthCredential type that was used.
-                                            const errInfo = {
-                                                errorCode: error.code,
-                                                errorMessage: error.message,
-                                                email: error.email,
-                                                credential: error.credential
-                                            };
-                                            console.log(errInfo);
-                                            alert("error");
-                                        });
-                                    });
-                            }
-                        }
-                    }
-                    onLogoutFinished={() => {
-                        this.props.firebase.auth().signOut().then(()=>{
-                            alert("logout.");
-                            this.props.dispatch(setUserID(undefined));
-                        }).catch(error =>{
-                            alert("Logout error");
-                        });
-                    }}/>
+                    permissions={['public_profile','email','user_friends']}
+                />
                 <FavList/>
-            </View>
-        );
+            </View>;
+        return (this.props.userID == "")?renderLoginPage:renderFavList;
     }
 
     handleGoBack() {
@@ -82,50 +44,17 @@ class FavScreen extends React.Component {
     }
 }
 
-export default connect((state, ownProps) => ({
-    ...state,
+export default connect((state) => ({
     firebase: state.fb.firebase,
     userID: state.user.userID
 }))(FavScreen);
 
+const bgColor = "#F5FCFF";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: bgColor,
     }
 });
-
-// <LoginButton
-//     publishPermissions={["publish_actions,email"]}
-//     onLoginFinished={
-//         (error, result) => {
-//             if (error) {
-//                 alert("login has error: " + result.error);
-//             } else if (result.isCancelled) {
-//                 alert("login is cancelled.");
-//             } else {
-//                 AccessToken.getCurrentAccessToken().then(
-//                 (data) => {
-//                     const {firebase} = this.props.fb;
-//                     const credential =  firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-//                     firebase.auth().signInWithCredential(credential).then((result) => {
-//                         this.props.dispatch(setUserID(result.uid));
-//                         alert("success");
-//                     }).catch((error) => {
-//                         // The firebase.auth.AuthCredential type that was used.
-//                         const errInfo = {
-//                             errorCode: error.code,
-//                             errorMessage: error.message,
-//                             email: error.email,
-//                             credential: error.credential
-//                         };
-//                         console.log(errInfo);
-//                         alert("error");
-//                     });
-//                 });
-//             }
-//         }
-//     }
-//     onLogoutFinished={() => alert("logout.")}/>

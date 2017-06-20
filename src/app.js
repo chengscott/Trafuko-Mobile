@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {BackHandler} from 'react-native';
+import {BackHandler, NetInfo, AsyncStorage} from 'react-native';
+import {persistStore} from 'redux-persist';
 import {
     TabNavigator,
     StackNavigator,
@@ -18,6 +19,7 @@ import * as firebase from "firebase";
 
 import {user} from './states/user-reducers';
 import {fav} from './states/fav-reducers';
+import {setConnectState,setUserID} from './states/user-actions';
 import CardScreen from './components/CardScreen';
 import FavScreen from './components/FavScreen';
 import VRScreen from './components/VRScreen';
@@ -36,7 +38,7 @@ const firebaseApp = firebase.initializeApp(config);
 const initialFbState = {
     firebase: undefined
 };
-const fb = (state = initialFbState, action) => {
+const fb = (state = initialFbState) => {
     if (firebaseApp !== undefined) {
         return {firebase: firebase};
     }
@@ -90,10 +92,24 @@ class AppWithStyleAndNavigator extends React.Component {
 
     static propTypes = {
         nav: PropTypes.object.isRequired,
+        isConnected: PropTypes.bool.isRequired,
         dispatch: PropTypes.func.isRequired
     };
+    constructor(props) {
+        super(props);
+        this.handleConnectChange = this.handleConnectChange.bind(this);
+    }
+
+    componentWillMount() {
+        firebase.auth().onAuthStateChanged((firebaseUser) => {
+            if (firebaseUser) {
+                this.props.dispatch(setUserID(firebaseUser.uid));
+            }
+        });
+    }
 
     componentDidMount() {
+        NetInfo.isConnected.addEventListener('change', this.handleConnectChange);
         BackHandler.addEventListener('hardwareBackPress', () => {
             const {dispatch, nav} = this.props;
             if (nav.index === 0 && nav.routes[0].index === 0) return false;
@@ -104,6 +120,7 @@ class AppWithStyleAndNavigator extends React.Component {
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress');
+        NetInfo.isConnected.removeEventListener('change', this.handleConnectChange);
     }
 
     render() {
@@ -116,17 +133,27 @@ class AppWithStyleAndNavigator extends React.Component {
             </StyleProvider>
         );
     }
+
+    handleConnectChange(status) {
+        this.props.dispatch(setConnectState(status));
+    }
 }
 
 const AppWithNavState = connect(state => ({
-    nav: state.navReducer
+    nav: state.navReducer,
+    isConnected: state.user.isConnected
 }))(AppWithStyleAndNavigator);
 
 const store = createStore(combineReducers({
     navReducer, fb, user, fav
 }), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
 
+persistStore(store, {
+    storage: AsyncStorage,
+    whitelist: ['user','navReducer']
+});
 export default class App extends React.Component {
+
     render() {
         return (
             <Provider store={store}>

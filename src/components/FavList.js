@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ListView, RefreshControl} from 'react-native';
+import {ListView, RefreshControl, View , Text, StyleSheet} from 'react-native';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import {connect} from 'react-redux';
 
 import FavItem from './FavItem';
 
-import {setUserID} from '../states/user-actions';
 import {listFavs, listMoreFavs} from '../states/fav-actions';
-
+const white = "#FFF";
 class FavList extends React.Component {
 
     static propTypes = {
@@ -22,7 +21,9 @@ class FavList extends React.Component {
         dispatch: PropTypes.func.isRequired,
         scrollProps: PropTypes.object,
         firebase: PropTypes.object.isRequired,
-        userID: PropTypes.string
+        userID: PropTypes.string,
+        isConnected: PropTypes.bool.isRequired,
+        emptyState: PropTypes.bool.isRequired
     };
 
     constructor(props) {
@@ -37,22 +38,17 @@ class FavList extends React.Component {
         this.handleRefresh = this.handleRefresh.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
-
     componentDidMount() {
-        const {firebase} = this.props;
-        if(this.props.userID == undefined){
-            this.props.firebase.auth().onAuthStateChanged((firebaseUser) => {
-                if (firebaseUser) {
-                    this.props.dispatch(setUserID(firebaseUser.uid));
-                    this.props.dispatch(listFavs(firebaseUser.uid,firebase));
-                }
-            });
-        }
+        const {userID,dispatch,firebase} = this.props;
+        dispatch(listFavs(userID,firebase));
     }
 
     componentWillReceiveProps(nextProps) {
-        const {favs} = this.props;
+        const {dispatch,firebase,userID,favs} = this.props;
 
+        if(userID !== "" && userID !== nextProps.userID) {
+            dispatch(listFavs(userID,firebase));
+        }
         if (favs !== nextProps.favs) {
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(nextProps.favs)
@@ -61,8 +57,8 @@ class FavList extends React.Component {
     }
 
     render() {
-        const {listingFavs, hasMoreFavs, favs, scrollProps} = this.props;
-        return (
+        const {listingFavs, scrollProps} = this.props;
+        const renderFavList =
             <ListView
                 refreshControl={
                     <RefreshControl refreshing={listingFavs} onRefresh={this.handleRefresh} />
@@ -73,22 +69,28 @@ class FavList extends React.Component {
                 renderRow={(p) => {
                     return <FavItem {...p} />;
                 }}
-                // canLoadMore={() => {
-                //     if (listingFavs || !favs.length)
-                //         return false;
-                //     return hasMoreFavs;
-                // }}
-                // onLoadMoreAsync={this.handleLoadMore}
-                style={{backgroundColor: '#fff'}}
+                canLoadMore={() => {
+                    // if (listingFavs || !favs.length)
+                    //     return false;
+                    // return hasMoreFavs;
+                    return false;
+                }}
+                onLoadMoreAsync={this.handleLoadMore}
+                style={{backgroundColor: white}}
                 ref={(el) => this.listEl = el}
                 {...scrollProps}
-            />
-        );
+            />;
+        const renderNoFavs =
+            <View style={styles.container}>
+                <Text>{"No Favs"}</Text>
+            </View>;
+
+        return  (this.props.emptyState)?renderNoFavs:renderFavList;
     }
 
     handleRefresh() {
         const {dispatch, firebase, userID} = this.props;
-        if(userID !== undefined)
+        if(userID !== "")
             dispatch(listFavs(userID,firebase));
     }
 
@@ -100,11 +102,23 @@ class FavList extends React.Component {
     }
 }
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
     listingFavs: state.fav.listingFavs,
     listingMoreFavs: state.fav.listingMoreFavs,
     favs: state.fav.favs,
     hasMoreFavs: state.fav.hasMore,
     firebase: state.fb.firebase,
-    userID: state.user.userID
+    userID: state.user.userID,
+    isConnected: state.user.isConnected,
+    emptyState: state.fav.emptyState
 }))(FavList);
+
+const bgColor = "#F5FCFF";
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: bgColor
+    }
+});

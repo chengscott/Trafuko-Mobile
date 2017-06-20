@@ -12,19 +12,29 @@ function endFavList(favs) {
     };
 }
 
+function emptyFavList() {
+    return {
+        type: '@FAV/EMPTY_FAVS'
+    };
+}
+
 export function listFavs(favid, firebase) {
 
     return (dispatch) =>{
-        dispatch(startFavList());
-        firebase.database().ref('/fav/'+ favid).once('value').then( snapshot =>{
-            let arr = objToarr(snapshot.val());
-            arr.sort(function(a, b) {
-                let a_t = new Date(a.ts);
-                let b_t = new Date(b.ts);
-                return b_t.getTime() - a_t.getTime();
-            });
-            dispatch(endFavList(arr));
-        });
+        if(favid == ""){
+            dispatch(emptyFavList());
+        } else {
+            dispatch(startFavList());
+            firebase.database().ref('/fav/'+ favid).once('value').then( snapshot =>{
+                let arr = objToarr(snapshot.val());
+                arr.sort(function(a, b) {
+                    let a_t = new Date(a.ts);
+                    let b_t = new Date(b.ts);
+                    return b_t.getTime() - a_t.getTime();
+                });
+                dispatch(endFavList(arr));
+            }).done();
+        }
     };
 }
 function objToarr(obj) {

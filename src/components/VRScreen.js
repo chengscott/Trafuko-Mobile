@@ -33,15 +33,16 @@ class VRScreen extends React.Component {
     }
 }
 
-export default connect((state, ownProps) => ({
+export default connect((state) => ({
     ...state
 }))(VRScreen);
 
+const bgColor = "#F5FCFF";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: bgColor,
     }
 });
