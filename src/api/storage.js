@@ -16,7 +16,7 @@ export function asyncSave(key, data) {
             });
             arr.push(data);
             AsyncStorage.setItem(key,JSON.stringify(arr));
-        }else {
+        } else {
             arr.push(data);
             AsyncStorage.setItem(key,JSON.stringify(arr));
         }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import FavList from './FavList';
+
 class FavScreen extends React.Component {
 
     static propTypes = {

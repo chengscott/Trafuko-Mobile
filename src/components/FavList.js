@@ -4,9 +4,9 @@ import {ListView, RefreshControl, View , Text, StyleSheet} from 'react-native';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import {connect} from 'react-redux';
 
+import {listFavs} from '../states/fav-actions';
 import FavItem from './FavItem';
 
-import {listFavs} from '../states/fav-actions';
 const white = "#FFF";
 class FavList extends React.Component {
 
@@ -47,9 +47,9 @@ class FavList extends React.Component {
     componentWillReceiveProps(nextProps) {
         const {firebase,dispatch,userID,favs,isConnected} = this.props;
 
-        var flag1 = userID == "" && userID !== nextProps.userID;
-        var flag2 = userID !== "" && isConnected !== nextProps.isConnected && isConnected === false;
-        if(flag1 || flag2){
+        const flag1 = userID == '' && userID !== nextProps.userID;
+        const flag2 = userID !== '' && isConnected !== nextProps.isConnected && isConnected === false;
+        if (flag1 || flag2) {
             dispatch(listFavs(nextProps.userID,firebase));
         }
         if (favs !== nextProps.favs) {
@@ -86,14 +86,14 @@ class FavList extends React.Component {
         const renderNoFavs =
             <View style={styles.container}>
                 <Text>{"No Favs"}</Text>
-            </View>;
-
-        return  (this.props.emptyState)?renderNoFavs:renderFavList;
+            </View>
+        ;
+        return (this.props.emptyState ? renderNoFavs : renderFavList);
     }
 
     handleRefresh() {
         const {dispatch, firebase, userID} = this.props;
-        if(userID !== "")
+        if (userID !== '')
             dispatch(listFavs(userID,firebase));
     }
 
