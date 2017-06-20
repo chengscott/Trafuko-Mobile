@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Dimensions, StyleSheet, View, Text} from 'react-native';
+import {Dimensions, StyleSheet, View, Text, Image} from 'react-native';
 import {Button} from 'native-base';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -121,10 +121,25 @@ class Card extends React.Component {
 }
 
 class NoMoreCards extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.imageNum = Math.floor(Math.random() * 5);
+    }
+
     render() {
+        const n = this.imageNum;
         return (
-            <View style={styles.container}>
-                <Text style={styles.noMoreCardsText}>No more cards</Text>
+            <View style={styles.noMoreCards}>
+                {
+                    n == 0 ? <Image source={require('../images/0.png')} style={styles.image0} /> :
+                    n == 1 ? <Image source={require('../images/1.png')} style={styles.image1} /> :
+                    n == 2 ? <Image source={require('../images/2.png')} style={styles.image2} /> :
+                    n == 3 ? <Image source={require('../images/3.png')} style={styles.image3} /> :
+                    n == 4 ? <Image source={require('../images/4.png')} style={styles.image4} /> :
+                        <Image source={require('../images/5.png')} style={styles.image5} />
+                }
+                <Text style={styles.noMoreCardsText}>一日一幹話，醫生遠離你</Text>
             </View>
         );
     }
@@ -172,8 +187,37 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
+    noMoreCards: {
+        flex: 1,
+        alignItems: 'center',
+        paddingTop: 100
+    },
     noMoreCardsText: {
         fontSize: 22,
+    },
+    image0: {
+        width: 200,
+        height: 129
+    },
+    image1: {
+        width: 200,
+        height: 200
+    },
+    image2: {
+        width: 150,
+        height: 150
+    },
+    image3: {
+        width: 160,
+        height: 150
+    },
+    image4: {
+        width: 100,
+        height: 100
+    },
+    image5: {
+        width: 100,
+        height: 100
     },
     container: {
         height: screenHeight,
