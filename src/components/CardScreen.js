@@ -65,7 +65,8 @@ class CardScreen extends React.Component {
                     showNope={false}
                     showMaybe={false}
                     hasMaybeAction={true}
-                    maybeText="aaaaaaaa"
+                    allowGestureTermination={false}
+                    stackGuid="123456"
                     cardKey="swcard"
                     onClickHandler={this.onClick}
 
