@@ -11,6 +11,7 @@ export function fav(state = initFavState, action) {
         case '@FAV/EMPTY_FAVS':
             return {
                 ...state,
+                listingFavs: false,
                 emptyState: true
             };
         case '@FAV/START_LIST_FAVS':

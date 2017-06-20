@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 
 import FavItem from './FavItem';
 
-import {listFavs, listMoreFavs} from '../states/fav-actions';
+import {listFavs} from '../states/fav-actions';
 const white = "#FFF";
 class FavList extends React.Component {
 

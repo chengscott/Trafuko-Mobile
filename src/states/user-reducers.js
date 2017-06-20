@@ -9,6 +9,9 @@ export function user(state = initUserState, action) {
     switch(action.type) {
         case 'persist/REHYDRATE':
             var incoming = action.payload.user;
+            if(incoming == undefined){
+                return {...state};
+            }
             return {
                 ...state,
                 userID: incoming.userID,

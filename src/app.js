@@ -98,7 +98,7 @@ const AppNavigator = StackNavigator({
         headerRight: (
             <View style={{flexDirection:'row', flexWrap:'wrap'}}>
                 <LoginButton
-                    permissions={['public_profile','email','user_friends']}
+                    permissions={['public_profile','email']}
                 />
                 <Icon name='more' style={{color: '#fff', paddingRight: 25, paddingLeft: 20}} />
             </View>
@@ -186,7 +186,7 @@ const store = createStore(combineReducers({
 
 persistStore(store, {
     storage: AsyncStorage,
-    whitelist: ['user','navReducer']
+    whitelist: ['user']
 });
 export default class App extends React.Component {
 
