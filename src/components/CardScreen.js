@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-
 import {Dimensions, StyleSheet, View, Text} from 'react-native';
 import {Button} from 'native-base';
-
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import SwipeCards from 'react-native-swipe-cards';
 
 const screenWidth = Dimensions.get('window').width;
@@ -22,9 +19,6 @@ class CardScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleGoVR = this.handleGoVR.bind(this);
-        this.handleLike = this.handleLike.bind(this);
-        this.handleUnlike =this.handleUnlike.bind(this);
         this.state = {
             Data: [
                 {id: "0001", text:"當你覺得自己累得跟狗一樣的時候，其實你誤會大了。狗都沒你這麼累。", vote: 23},{id:"0002", text:"玩遊戲輸了，一定是隊友的問題，要是他們夠強，我根本扯不了後腿", vote: 107},
@@ -33,10 +27,9 @@ class CardScreen extends React.Component {
                 {id: "0007", text:"凡是每天喝水的人，有高機率在100年內死去", vote: 12},{id:"0008", text:"台灣競爭力低落，在美國就連小學生都會說流利的英語", vote: 47}
             ]
         };
-    }
-
-    componentDidMount() {
-
+        this.handleGoVR = this.handleGoVR.bind(this);
+        this.handleLike = this.handleLike.bind(this);
+        this.handleUnlike =this.handleUnlike.bind(this);
     }
 
     render() {
@@ -109,9 +102,7 @@ class CardScreen extends React.Component {
 }
 
 class Card extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+
     render() {
         return (
             <View style={styles.card}>
@@ -130,10 +121,6 @@ class Card extends React.Component {
 }
 
 class NoMoreCards extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <View style={styles.container}>

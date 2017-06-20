@@ -1,5 +1,7 @@
 import {fetchDataLocal} from '../api/storage';
-/**    favlist    **/
+
+/* favlist */
+
 function startFavList() {
     return {
         type: '@FAV/START_LIST_FAVS'
@@ -30,26 +32,25 @@ function fetchDataOnline(favid, firebase) {
 // 0 for localData
 // 1 for online data
 export function listFavs(favid, firebase) {
-
-    return (dispatch, getState) =>{
+    return (dispatch, getState) => {
         const {isConnected} = getState().user;
-        if(isConnected === true && favid !== "") {
+        if (isConnected === true && favid !== '') {
             dispatch(startFavList());
-            Promise.all([fetchDataLocal('localFavs'+favid),fetchDataOnline(favid, firebase)]).then( data => {
-                if(data[0] !== null && data[1] !== null){
+            Promise.all([fetchDataLocal('localFavs' + favid), fetchDataOnline(favid, firebase)]).then(data => {
+                if (data[0] !== null && data[1] !== null) {
                     let arr1 = JSON.parse(data[0]);
                     let arr2 = objToarr(data[1]);
                     let arr3 = arrayUnique(arr1.concat(arr2));
                     arr3 = arraySortByts(arr3);
                     dispatch(endFavList(arr3));
-                }else if(data[0] === null && data[1] === null){
+                } else if(data[0] === null && data[1] === null) {
                     dispatch(emptyFavList());
-                }else {
-                    if(data[0] === null) {
+                } else {
+                    if (data[0] === null) {
                         let arr = objToarr(data[1]);
                         arr = arraySortByts(arr);
                         dispatch(endFavList(arr));
-                    }else {
+                    } else {
                         let arr = JSON.parse(data[0]);
                         arr = arraySortByts(arr);
                         dispatch(endFavList(arr));
@@ -59,24 +60,24 @@ export function listFavs(favid, firebase) {
                 console.log(err);
                 dispatch(emptyFavList());
             });
-        }
-        else if(isConnected === false){
+        } else if (isConnected === false) {
             dispatch(startFavList());
-            fetchDataLocal('localFavs'+favid).then( result => {
-                if(result !== null){
+            fetchDataLocal('localFavs' + favid).then(result => {
+                if (result !== null) {
                     let arr = JSON.parse(result);
                     arr = arraySortByts(arr);
                     dispatch(endFavList(arr));
                 } else dispatch(emptyFavList());
-            }).catch( err => {
+            }).catch(err => {
                 console.log(err);
                 dispatch(emptyFavList());
             });
-        }else dispatch(emptyFavList());
+        } else dispatch(emptyFavList());
     };
 }
+
 function arraySortByts(array) {
-    var a = array;
+    let a = array;
     a.sort(function(a, b) {
         let a_t = new Date(a.ts);
         let b_t = new Date(b.ts);
@@ -84,11 +85,12 @@ function arraySortByts(array) {
     });
     return a;
 }
+
 function arrayUnique(array) {
-    var a = array.concat();
-    for(var i=0; i<a.length; ++i) {
-        for(var j=i+1; j<a.length; ++j) {
-            if(a[i] === a[j])
+    let a = array.concat();
+    for (let i = 0; i < a.length; ++i) {
+        for (let j = i + 1; j < a.length; ++j) {
+            if (a[i] === a[j])
                 a.splice(j--, 1);
         }
     }
@@ -103,7 +105,7 @@ function objToarr(obj) {
     return arr;
 }
 
-/**    favitem    **/
+/* favitem */
 export function deleteFav(favId,firebase) {
     return {
         type: '@TEST'

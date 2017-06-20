@@ -24,27 +24,28 @@ class FavItem extends React.Component {
         super(props);
 
         this.state = {
-            text: ""
+            text: ''
         };
         this.handleDeleteFav = this.handleDeleteFav.bind(this);
     }
 
     componentDidMount() {
         const {isConnected, id, firebase} = this.props;
-        if(isConnected === true){
-            firebase.database().ref('/posts/' + id).once('value').then( snapshot =>{
-                if(snapshot !== null){
+        if (isConnected === true) {
+            firebase.database().ref('/posts/' + id).once('value').then(snapshot => {
+                if (snapshot !== null) {
                     this.setState({
                         text: snapshot.val().text
                     });
                 }
             });
-        }else {
+        } else {
             this.setState({
                 text: this.props.text
             });
         }
     }
+
     render() {
         const {ts} = this.props;
         const time = new Date(ts);
@@ -63,7 +64,7 @@ class FavItem extends React.Component {
 
     handleDeleteFav(id) {
         const {firebase} = this.props;
-        this.props.dispatch(deleteFav(id,firebase));
+        this.props.dispatch(deleteFav(id, firebase));
     }
 }
 
