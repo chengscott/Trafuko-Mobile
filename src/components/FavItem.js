@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {View, StyleSheet, Text, Platform} from 'react-native';
-import {ListItem, Icon} from 'native-base';
+import {ListItem} from 'native-base';
 import {connect} from 'react-redux';
+import fecha from 'fecha';
 
 import appColors from '../styles/colors';
 
@@ -21,7 +22,7 @@ class FavItem extends React.Component {
         super(props);
 
         this.state = {
-            text: undefined
+            text: ""
         };
 
         this.handleDeleteFav = this.handleDeleteFav.bind(this);
@@ -38,12 +39,14 @@ class FavItem extends React.Component {
         });
     }
     render() {
-        const {id, ts} = this.props;
+        const {ts} = this.props;
+        const time = new Date(ts);
+        const favtime = fecha.format(time, "YYYY-MM-DD");
         return (
             <ListItem onPress={()=> this.handleDeleteFav(this.props.id)} style={StyleSheet.flatten(styles.listItem)}>
                 <View style={styles.fav}>
                     <View style={styles.wrap}>
-                        <Text style={styles.ts}>{ts}</Text>
+                        <Text style={styles.ts}>{favtime}</Text>
                         <Text style={styles.text}>{this.state.text}</Text>
                     </View>
                 </View>
@@ -56,8 +59,7 @@ class FavItem extends React.Component {
     }
 }
 
-export default connect((state, ownProps) => ({
-    ...state,
+export default connect((state) => ({
     firebase: state.fb.firebase
 }))(FavItem);
 
@@ -80,13 +82,15 @@ const styles = StyleSheet.create({
         flex: 1
     },
     ts: {
-        color: appColors.textLight
+        color: appColors.textLight,
+        marginLeft: 8
     },
     text: {
         fontSize: 17,
         fontFamily: (Platform.OS === 'ios') ? 'System' : 'Roboto',
         color: appColors.text,
         marginTop: 4,
-        marginBottom: 4
+        marginBottom: 4,
+        marginLeft: 8
     }
 });
