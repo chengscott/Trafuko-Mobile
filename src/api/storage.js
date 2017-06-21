@@ -4,6 +4,21 @@ export function clearAllDataWithKey(key) {
     AsyncStorage.removeItem(key);
 }
 
+export function findData(key,id) {
+    return AsyncStorage.getItem(key).then(result => {
+        let arr = JSON.parse(result);
+        let len = arr.length;
+        for(let i =0; i<len; i++) {
+            if(arr[i].id == id){
+                return true;
+            }else {
+                return false;
+            }
+        }return false;
+    }).catch( err => {
+        return err;
+    });
+}
 export function removeDataWithID(key,id) {
     return fetchDataLocal(key).then( arr => {
         arr = JSON.parse(arr);
@@ -11,8 +26,6 @@ export function removeDataWithID(key,id) {
             arr = arr.filter((element) => {
                 return element.id !== id;
             });
-            console.log('2222222222222');
-            console.log(arr);
             return AsyncStorage.setItem(key,JSON.stringify(arr)).then(()=>{
                 return true;
             }).catch(err => {

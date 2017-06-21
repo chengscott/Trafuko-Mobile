@@ -4,6 +4,7 @@ import {View, StyleSheet, Text, Platform, Alert} from 'react-native';
 import {ListItem} from 'native-base';
 import {connect} from 'react-redux';
 import fecha from 'fecha';
+import FIcon from 'react-native-vector-icons/FontAwesome';
 
 import appColors from '../styles/colors';
 import {deleteFav} from '../states/fav-actions';
@@ -34,6 +35,9 @@ class FavItem extends React.Component {
                     <View style={styles.wrap}>
                         <Text style={styles.ts}>{favtime}</Text>
                         <Text style={styles.text}>{text}</Text>
+                    </View>
+                    <View style={styles.delete}>
+                        <FIcon name="close" style={StyleSheet.flatten(styles.deleteIcon)}/>
                     </View>
                 </View>
             </ListItem>
@@ -77,6 +81,11 @@ const styles = StyleSheet.create({
     wrap: {
         flex: 1
     },
+    delete: {
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        paddingRight: 0
+    },
     ts: {
         color: appColors.textLight,
         marginLeft: 8
@@ -88,5 +97,10 @@ const styles = StyleSheet.create({
         marginTop: 4,
         marginBottom: 4,
         marginLeft: 8
-    }
+    },
+    deleteIcon: {
+        fontSize: 15,
+        top: 2,
+        color: appColors.textLight
+    },
 });

@@ -111,6 +111,7 @@ class CardScreen extends React.Component {
         );
     }
 
+
     handleLike() {
         alert("like");
     }
@@ -120,16 +121,16 @@ class CardScreen extends React.Component {
     }
 
     onClick() {
-        Alert.alert(
-            '哈囉~',
-            '要收藏此則幹話嗎？',
-            [
-                {text: '取消', style: 'cancel'},
-                {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
-            ]
-        );
+        console.log("done");
     }
-
+    // Alert.alert(
+    //     '哈囉~',
+    //     '要收藏此則幹話嗎？',
+    //     [
+    //         {text: '取消', style: 'cancel'},
+    //         {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
+    //     ]
+    // );
     handleGoCamera() {
         this.props.navigation.navigate('Camera');
     }
@@ -156,7 +157,7 @@ class Card extends React.Component {
                 <View style={styles.cardBtn}>
                     <View style={styles.cardIcon}>
                         <MIcon name="crown" size={32} color="#4F8EF7" />
-                        <FIcon name="bookmark-o" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />
+                        <FIcon  onPress={this.handleFav} name="bookmark-o" size={25} style={{padding:6.5, margin:0,zIndex:1000}} color="#4F8EF7" />
                     </View>
                 </View>
             </View>
@@ -164,7 +165,7 @@ class Card extends React.Component {
     }
 
     handleFav() {
-        console.log("done");
+        alert("done");
     }
 }
 
