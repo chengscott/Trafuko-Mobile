@@ -4,7 +4,7 @@ import {ListView, RefreshControl, View , Text, StyleSheet, Image} from 'react-na
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import {connect} from 'react-redux';
 
-import {listFavs,emptyFavList} from '../states/fav-actions';
+import {listFavs} from '../states/fav-actions';
 import FavItem from './FavItem';
 
 const white = "#FFF";
@@ -39,6 +39,11 @@ class FavList extends React.Component {
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
 
+    componentDidMount() {
+        const {dispatch,userID,firebase} = this.props;
+        dispatch(listFavs(userID,firebase));
+    }
+
     componentWillReceiveProps(nextProps) {
         const {firebase,dispatch,userID,favs,isConnected} = this.props;
         const flag1 = userID == 'guest' && userID !== nextProps.userID;
@@ -47,7 +52,6 @@ class FavList extends React.Component {
             dispatch(listFavs(nextProps.userID,firebase));
         }
         if((flag1 && isConnected === true) || flag2) {
-            alert("connect");
             firebase.database().ref('/fav/'+nextProps.userID).on('value',function(snapshot){
                 dispatch(listFavs(nextProps.userID,firebase));
             });
@@ -55,7 +59,6 @@ class FavList extends React.Component {
         const flag3 = userID !== 'guest' && nextProps.userID === 'gurst';
         const flag4 = isConnected === true && nextProps.isConnected === false;
         if(flag3 || flag4){
-            alert("disconnect");
             firebase.database().ref('/fav/'+userID).off();
         }
         if (favs !== nextProps.favs) {
@@ -63,7 +66,6 @@ class FavList extends React.Component {
                 dataSource: this.state.dataSource.cloneWithRows(nextProps.favs)
             });
         }
-        //if(nextProps.emptyState == true && nextProps.favs.length == 0) dispatch(emptyFavList()); //to solve odd bugs
     }
 
     render() {

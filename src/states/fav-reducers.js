@@ -35,8 +35,6 @@ export function fav(state = initFavState, action) {
                 emptyState: false,
                 hasMore: action.favs.length > 0
             };
-        case '@FAVITEM_DELETE':
-            return {...state};
         default:
             return {...state};
     }

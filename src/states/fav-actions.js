@@ -1,4 +1,4 @@
-import {fetchDataLocal,asyncSave} from '../api/storage';
+import {fetchDataLocal,removeDataWithID,asyncUpdate} from '../api/storage';
 
 /* favlist */
 
@@ -21,8 +21,8 @@ export function emptyFavList() {
     };
 }
 
-function fetchDataOnline(favid, firebase) {
-    return firebase.database().ref('/fav/'+ favid).once('value').then( snapshot =>{
+function fetchDataOnline(userID, firebase) {
+    return firebase.database().ref('/fav/'+ userID).once('value').then( snapshot =>{
         let arr = objToarr(snapshot.val());
         return arr;
     }).catch(err => {
@@ -31,13 +31,12 @@ function fetchDataOnline(favid, firebase) {
 }
 // 0 for localData
 // 1 for online data
-export function listFavs(favid, firebase) {
+export function listFavs(userID, firebase) {
     return (dispatch, getState) => {
         const {isConnected} = getState().user;
-        if (isConnected === true && favid !== '') {
+        if (isConnected === true && userID !== 'guest') {
             dispatch(startFavList());
-            Promise.all([fetchDataLocal(favid), fetchDataOnline(favid, firebase)]).then(data => {
-
+            Promise.all([fetchDataLocal(userID), fetchDataOnline(userID, firebase)]).then(data => {
                 if (data[0] !== null && data[1] !== null) {
                     let arr1 = JSON.parse(data[0]);
                     let arr2 = objToarr(data[1]);
@@ -47,9 +46,16 @@ export function listFavs(favid, firebase) {
                             return getFav(firebase,element.id,element.ts);
                         });
                         Promise.all(posts).then(result => {
+                            console.log(arr1);
+                            console.log(result);
                             let arr3 = arrayUnique(arr1,result);
                             arr3 = arraySortByts(arr3);
-                            dispatch(endFavList(arr3));
+
+                            asyncUpdate(userID,arr3).then(result => {
+                                dispatch(endFavList(arr3));
+                            }).catch(err => {
+                                dispatch(emptyFavList());
+                            });
                         });
                     } else {
                         arr1 = arraySortByts(arr1);
@@ -66,7 +72,11 @@ export function listFavs(favid, firebase) {
                             });
                             Promise.all(posts).then(result => {
                                 let arrFinal = arraySortByts(result);
-                                dispatch(endFavList(arrFinal));
+                                asyncUpdate(userID,arrFinal).then(result => {
+                                    dispatch(endFavList(arrFinal));
+                                }).catch(err => {
+                                    dispatch(emptyFavList());
+                                });
                             });
                         }else {
                             dispatch(emptyFavList());
@@ -84,7 +94,7 @@ export function listFavs(favid, firebase) {
             });
         }
         else if(isConnected === false){
-            fetchDataLocal(favid).then( result => {
+            fetchDataLocal(userID).then( result => {
                 dispatch(startFavList());
                 if(result !== null){
                     let arr = JSON.parse(result);
@@ -123,36 +133,16 @@ function getFav(firebase,pid,favts) {
         return err;
     });
 }
-// function getFavList(uid, pid, ts) {
-//     this.props.firebase.ref('/posts/' + pid).once('value').then((snapshot) => {
-//         let val = snapshot.val();
-//         if (val !== null) {
-//             let obj = {
-//                 uid: uid,
-//                 id: pid,
-//                 text: val.text,
-//                 color: val.color,
-//                 ts: ts
-//             };
-//             let objs = this.state.favlist;
-//             objs.push(obj);
-//         }
-//     });
-// }
 
 function arrayUnique(array1, array2) {
 
-    let a = [];
     let len1 = array1.length;
-    let len2 = array2.length;
     for(let i = 0; i<len1; i++) {
-        for(let j = 0; j<len2; j++) {
-            if(array1[i].id !== array2[j].id) {
-                a.push(array1[i]);
-            }
-        }
+        array2 = array2.filter((element) => {
+            return element.id !== array1[i].id;
+        });
     }
-    return a.concat(array2);
+    return array1.concat(array2);
 }
 
 function objToarr(obj) {
@@ -164,8 +154,24 @@ function objToarr(obj) {
 }
 
 /* favitem */
-export function deleteFav(favId,firebase) {
-    return {
-        type: '@TEST'
+export function deleteFav(pid,firebase) {
+    return (dispatch, getState) => {
+        const {isConnected,userID} = getState().user;
+        if(isConnected === true && userID !== 'guest') {
+            removeDataWithID(userID,pid).then( result =>{
+                console.log(result);
+                firebase.database().ref('/fav/' + userID + '/' + pid).remove();
+            }).catch( err => {
+                console.log(err);
+                dispatch(emptyFavList());
+            });
+        }else {
+            removeDataWithID(userID,pid).then( result =>{
+                if(result) dispatch(listFavs(userID,firebase));
+            }).catch( err => {
+                console.log(err);
+                dispatch(emptyFavList());
+            });
+        }
     };
 }

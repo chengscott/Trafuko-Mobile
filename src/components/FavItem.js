@@ -41,14 +41,16 @@ class FavItem extends React.Component {
     }
 
     handleDeleteFav(id) {
+        const {firebase,dispatch} = this.props;
         Alert.alert(
             '注意',
             '您確定要刪除此收藏？',
             [
                 {text: '取消', style: 'cancel'},
-                {text: '確認', onPress: () => this.props.dispatch(deleteFav(id,firebase))},
+                {text: '確認', onPress: () => dispatch(deleteFav(id,firebase))},
             ]
         );
+        //this.props.dispatch(deleteFav(id,firebase))
     }
 }
 

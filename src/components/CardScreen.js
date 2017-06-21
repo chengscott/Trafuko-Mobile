@@ -6,7 +6,7 @@ import {Button} from 'native-base';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SwipeCards from 'react-native-swipe-cards';
-import {clearData} from '../api/storage';
+import {clearAllDataWithKey} from '../api/storage';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -14,6 +14,7 @@ const screenHeight = Dimensions.get('window').height;
 class CardScreen extends React.Component {
 
     static propTypes = {
+        isConnected: PropTypes.bool.isRequired,
         userID: PropTypes.string.isRequired,
         firebase: PropTypes.object.isRequired,
         navigation: PropTypes.object.isRequired,
@@ -24,12 +25,7 @@ class CardScreen extends React.Component {
         super(props);
 
         this.state = {
-            Data: [
-                {id: "0001", text:"當你覺得自己累得跟狗一樣的時候，其實你誤會大了。狗都沒你這麼累。", vote: 23},{id:"0002", text:"玩遊戲輸了，一定是隊友的問題，要是他們夠強，我根本扯不了後腿", vote: 107},
-                {id: "0003", text:"零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二", vote: 23},{id:"0004", text:"研究顯示，過越多生日的人越長壽", vote: 213},
-                {id: "0005", text:"在非洲，每一分鐘就有60秒過去", vote: 79},{id:"0006", text:"每個成功的男人背後，都有一條脊椎", vote: 49},
-                {id: "0007", text:"凡是每天喝水的人，有高機率在100年內死去", vote: 12},{id:"0008", text:"台灣競爭力低落，在美國就連小學生都會說流利的英語", vote: 47}
-            ]
+            Data: []
         };
         this.handleGoCamera = this.handleGoCamera.bind(this);
         this.handleLike = this.handleLike.bind(this);
@@ -37,6 +33,29 @@ class CardScreen extends React.Component {
         this.onClick = this.onClick.bind(this);
     }
 
+    componentDidMount() {
+        this.setState({
+            Data: [{id: "0001", text:"當你覺得自己累得跟狗一樣的時候，其實你誤會大了。狗都沒你這麼累。", vote: 23},{id:"0002", text:"玩遊戲輸了，一定是隊友的問題，要是他們夠強，我根本扯不了後腿", vote: 107},
+                {id: "0003", text:"零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二", vote: 23},{id:"0004", text:"研究顯示，過越多生日的人越長壽", vote: 213},
+                {id: "0005", text:"在非洲，每一分鐘就有60秒過去", vote: 79},{id:"0006", text:"每個成功的男人背後，都有一條脊椎", vote: 49},
+                {id: "0007", text:"凡是每天喝水的人，有高機率在100年內死去", vote: 12},{id:"0008", text:"台灣競爭力低落，在美國就連小學生都會說流利的英語", vote: 47}]
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {firebase,isConnected} = this.props;
+        if(isConnected === false && nextProps.isConnected === true) {
+            firebase.database().ref('/posts').limitToFirst(4).once('value').then( snapshot => {
+                let arr = objToarr(snapshot.val());
+                let newData = this.state.Data.concat(arr);
+                this.setState({
+                    Data: newData
+                });
+            }).catch( err => {
+                console.log(err);
+            });
+        }
+    }
     render() {
         return (
             <View style={{height:screenHeight, width:screenWidth}}>
@@ -57,7 +76,10 @@ class CardScreen extends React.Component {
                 </View>
                 <SwipeCards
                     cards={this.state.Data}
-                    renderCard={(cardData) => <Card text={cardData.text} key={cardData.id}/>}
+                    renderCard={(cardData) => <Card
+                        text={cardData.text}
+                        key={cardData.id}
+                    />}
                     renderNoMoreCards={() => <NoMoreCards />}
                     showYup={false}
                     showNope={false}
@@ -103,7 +125,7 @@ class CardScreen extends React.Component {
             '要收藏此則幹話嗎？',
             [
                 {text: '取消', style: 'cancel'},
-                {text: '確認', onPress: () => clearData(this.props.userID)},
+                {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
             ]
         );
     }
@@ -173,8 +195,17 @@ class NoMoreCards extends React.Component {
 
 export default connect((state) => ({
     userID: state.user.userID,
+    isConnected: state.user.isConnected,
     firebase: state.fb.firebase
 }))(CardScreen);
+
+function objToarr(obj) {
+    let arr = [];
+    for (let x in obj) {
+        arr.push(obj[x]);
+    }
+    return arr;
+}
 
 const styles = StyleSheet.create({
     card: {
