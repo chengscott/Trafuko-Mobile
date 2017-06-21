@@ -22,7 +22,7 @@ import {fav} from './states/fav-reducers';
 import {setConnectState,setUserID} from './states/user-actions';
 import CardScreen from './components/CardScreen';
 import FavScreen from './components/FavScreen';
-import VRScreen from './components/VRScreen';
+import CameraScreen from './components/CameraScreen';
 import LoginButton from './components/FBLoginButton';
 
 /* Firebase */
@@ -85,7 +85,7 @@ const MainNavigator = TabNavigator({
 
 const AppNavigator = StackNavigator({
     Main: {screen: MainNavigator},
-    VR: {screen: VRScreen}
+    Camera: {screen: CameraScreen}
 }, {
     navigationOptions: {
         headerStyle: {

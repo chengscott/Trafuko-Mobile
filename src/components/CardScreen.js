@@ -27,7 +27,7 @@ class CardScreen extends React.Component {
                 {id: "0007", text:"凡是每天喝水的人，有高機率在100年內死去", vote: 12},{id:"0008", text:"台灣競爭力低落，在美國就連小學生都會說流利的英語", vote: 47}
             ]
         };
-        this.handleGoVR = this.handleGoVR.bind(this);
+        this.handleGoCamera = this.handleGoCamera.bind(this);
         this.handleLike = this.handleLike.bind(this);
         this.handleUnlike =this.handleUnlike.bind(this);
     }
@@ -45,8 +45,8 @@ class CardScreen extends React.Component {
                 </View>
                 <View style={styles.VRbtnBox}>
                     <View style={styles.VRbtn}>
-                        <Button rounded style={{margin: 20}}>
-                            <MIcon name="google-cardboard" size={50} color="white" />
+                        <Button rounded style={{margin: 5}}>
+                            <MIcon name="camera" size={35} color="white" />
                         </Button>
                     </View>
                 </View>
@@ -75,7 +75,7 @@ class CardScreen extends React.Component {
                 </View>
                 <View style={styles.VRbtnBox}>
                     <View style={styles.VRbtn}>
-                        <Button onPress={()=>this.handleGoVR()} rounded transparent style={{margin: 20}}>
+                        <Button onPress={()=>this.handleGoCamera()} rounded transparent style={{margin: 20}}>
                             <Text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text>
                         </Button>
                     </View>
@@ -96,8 +96,8 @@ class CardScreen extends React.Component {
 
     }
 
-    handleGoVR() {
-        this.props.navigation.navigate('VR');
+    handleGoCamera() {
+        this.props.navigation.navigate('Camera');
     }
 }
 
