@@ -79,6 +79,7 @@ class CardScreen extends React.Component {
                     renderCard={(cardData) => <Card
                         text={cardData.text}
                         key={cardData.id}
+                        id={cardData.id}
                     />}
                     renderNoMoreCards={() => <NoMoreCards />}
                     showYup={false}
@@ -146,6 +147,7 @@ class Card extends React.Component {
         super(props);
 
         this.handleFav = this.handleFav.bind(this);
+
     }
     render() {
         return (
@@ -156,7 +158,8 @@ class Card extends React.Component {
                 <View style={styles.cardBtn}>
                     <View style={styles.cardIcon}>
                         <MIcon name="crown" size={32} color="#4F8EF7" />
-                        <FIcon name="bookmark-o" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />
+                        { (true) && <FIcon onPress={this.handleFav} name="bookmark-o" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
+                        { (false) && <FIcon name="bookmark" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
                     </View>
                 </View>
             </View>
@@ -164,7 +167,8 @@ class Card extends React.Component {
     }
 
     handleFav() {
-        console.log("done");
+        alert(this.props.id + " " + this.props.text);
+        //console.log("done");
     }
 }
 
