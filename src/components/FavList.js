@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ListView, RefreshControl, View , Text, StyleSheet} from 'react-native';
+import {ListView, RefreshControl, View , Text, StyleSheet, Image} from 'react-native';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import {connect} from 'react-redux';
 
@@ -83,11 +83,17 @@ class FavList extends React.Component {
                 ref={(el) => this.listEl = el}
                 {...scrollProps}
             />;
-        const renderNoFavs =
+        const renderNoFavs = (
             <View style={styles.container}>
-                <Text>{"No Favs"}</Text>
+                <View style={styles.arrowBox}>
+                    <Text style={styles.blankText}>登入後收藏</Text>
+                    <Image source={require('../images/arrow.png')} style={styles.imageArrow} />
+                </View>
+                <View style={styles.blankBox}>
+                    <Image source={require('../images/blank.png')} style={styles.imageBlank} />
+                </View>
             </View>
-        ;
+        );
         return (this.props.emptyState ? renderNoFavs : renderFavList);
     }
 
@@ -120,8 +126,33 @@ const bgColor = "#F5FCFF";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: bgColor
+    },
+    arrowBox: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+    },
+    imageArrow: {
+        width: 80,
+        height: 175,
+        marginTop: 5,
+        marginRight: 15,
+        marginBottom: 10
+    },
+    blankBox: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    imageBlank: {
+        width: 280,
+        height: 190,
+        marginTop: 15
+    },
+    blankText: {
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        fontSize: 20,
+        paddingRight: 13
     }
 });
