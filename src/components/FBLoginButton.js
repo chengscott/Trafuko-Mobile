@@ -75,7 +75,7 @@ class LoginButton extends React.Component {
         } else {
             this.props.firebase.auth().signOut().then(() => {
                 this.props.dispatch(logout());
-                this.props.dispatch(setUserID(''));
+                this.props.dispatch(setUserID('guest'));
             }).catch(error => {
                 console.log(error);
             });

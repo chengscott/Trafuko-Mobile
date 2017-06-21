@@ -34,6 +34,7 @@ class FavItem extends React.Component {
         const {isConnected, id, firebase} = this.props;
         if (isConnected === true) {
             firebase.database().ref('/posts/' + id).once('value').then(snapshot => {
+                console.log(snapshot.val());
                 if (snapshot !== null) {
                     this.setState({
                         text: snapshot.val().text
@@ -48,20 +49,38 @@ class FavItem extends React.Component {
             }
         }
     }
+    componentWillReceiveProps(nextProps) {
+        const {isConnected, id, firebase} = this.props;
+        if(id != nextProps.id) {
+            if (isConnected === true) {
+                firebase.database().ref('/posts/' + nextProps.id).once('value').then(snapshot => {
+                    if (snapshot !== null) {
+                        this.setState({
+                            text: snapshot.val().text
+                        });
+                    }
+                });
+            }else {
+                if(this.props.text !== null){
+                    this.setState({
+                        text: this.props.text
+                    });
+                }
+            }
+        }
+
+    }
 
     render() {
         const {ts} = this.props;
         const time = new Date(ts);
         const favtime = fecha.format(time, "YYYY-MM-DD");
         return (
-            <ListItem  style={StyleSheet.flatten(styles.listItem)}>
+            <ListItem  onPress={()=>{this.handleDeleteFav(this.props.id)}} style={StyleSheet.flatten(styles.listItem)}>
                 <View style={styles.fav}>
                     <View style={styles.wrap}>
                         <Text style={styles.ts}>{favtime}</Text>
                         <Text style={styles.text}>{this.state.text}</Text>
-                    </View>
-                    <View style={styles.delete}>
-                        <FIcon.Button name="close" onPress={()=>this.handleDeleteFav(this.props.id)}  style={StyleSheet.flatten(styles.deleteIconButton)}/>
                     </View>
                 </View>
             </ListItem>
@@ -102,11 +121,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start'
     },
-    delete: {
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        paddingRight: 0
-    },
     wrap: {
         flex: 1
     },
@@ -121,10 +135,5 @@ const styles = StyleSheet.create({
         marginTop: 4,
         marginBottom: 4,
         marginLeft: 8
-    },
-    deleteIconButton: {
-        width: 24,
-        height: 24,
-        top: 0
     }
 });

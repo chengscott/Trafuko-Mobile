@@ -1,6 +1,6 @@
 const initUserState = {
     isConnected: false,
-    userID: '',
+    userID: 'guest',
     logtxt: '登入',
     disable: false
 };

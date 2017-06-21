@@ -15,7 +15,7 @@ function endFavList(favs) {
     };
 }
 
-function emptyFavList() {
+export function emptyFavList() {
     return {
         type: '@FAV/EMPTY_FAVS'
     };
@@ -36,7 +36,7 @@ export function listFavs(favid, firebase) {
         const {isConnected} = getState().user;
         if (isConnected === true && favid !== '') {
             dispatch(startFavList());
-            Promise.all([fetchDataLocal('localFavs' + favid), fetchDataOnline(favid, firebase)]).then(data => {
+            Promise.all([fetchDataLocal(favid), fetchDataOnline(favid, firebase)]).then(data => {
                 if (data[0] !== null && data[1] !== null) {
                     let arr1 = JSON.parse(data[0]);
                     let arr2 = objToarr(data[1]);
@@ -49,11 +49,13 @@ export function listFavs(favid, firebase) {
                     if (data[0] === null) {
                         let arr = objToarr(data[1]);
                         arr = arraySortByts(arr);
-                        dispatch(endFavList(arr));
+                        if(arr.length == 0) dispatch(emptyFavList());
+                        else dispatch(endFavList(arr));
                     } else {
                         let arr = JSON.parse(data[0]);
                         arr = arraySortByts(arr);
-                        dispatch(endFavList(arr));
+                        if(arr.length == 0) dispatch(emptyFavList());
+                        else dispatch(endFavList(arr));
                     }
                 }
             }).catch( err => {
@@ -62,7 +64,7 @@ export function listFavs(favid, firebase) {
             });
         }
         else if(isConnected === false){
-            fetchDataLocal('localFavs'+favid).then( result => {
+            fetchDataLocal(favid).then( result => {
                 dispatch(startFavList());
                 if(result !== null){
                     let arr = JSON.parse(result);

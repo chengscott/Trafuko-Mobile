@@ -22,7 +22,7 @@ export function fav(state = initFavState, action) {
                 listingMoreFavs: undefined
             };
         case '@FAV/END_LIST_FAVS':
-            if (!action.favs)
+            if (action.favs.length == 0)
                 return {
                     ...state,
                     listingFavs: false,

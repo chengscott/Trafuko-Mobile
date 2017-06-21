@@ -4,7 +4,7 @@ import {ListView, RefreshControl, View , Text, StyleSheet} from 'react-native';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import {connect} from 'react-redux';
 
-import {listFavs} from '../states/fav-actions';
+import {listFavs,emptyFavList} from '../states/fav-actions';
 import FavItem from './FavItem';
 
 const white = "#FFF";
@@ -31,7 +31,7 @@ class FavList extends React.Component {
 
         this.state = {
             dataSource: new ListView.DataSource({
-                rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2)
+                rowHasChanged: (row1, row2) => row1 !== row2
             })
         };
 
@@ -46,23 +46,36 @@ class FavList extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const {firebase,dispatch,userID,favs,isConnected} = this.props;
-
-        const flag1 = userID == '' && userID !== nextProps.userID;
-        const flag2 = userID !== '' && isConnected !== nextProps.isConnected && isConnected === false;
+        const flag1 = userID == 'guest' && userID !== nextProps.userID;
+        const flag2 = userID !== 'guest' && isConnected !== nextProps.isConnected && isConnected === false;
         if (flag1 || flag2) {
             dispatch(listFavs(nextProps.userID,firebase));
+        }
+        if((flag1 && isConnected === true) || flag2) {
+            alert("connect");
+            firebase.database().ref('/fav/'+nextProps.userID).on('value',function(snapshot){
+                dispatch(listFavs(nextProps.userID,firebase));
+            });
+        }
+        const flag3 = userID !== 'guest' && nextProps.userID === 'gurst';
+        const flag4 = isConnected === true && nextProps.isConnected === false;
+        if(flag3 || flag4){
+            alert("disconnect");
+            firebase.database().ref('/fav/'+userID).off();
         }
         if (favs !== nextProps.favs) {
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(nextProps.favs)
             });
         }
+        if(nextProps.emptyState == true && nextProps.favs.length == 0) dispatch(emptyFavList()); //to solve odd bugs
     }
 
     render() {
         const {listingFavs, scrollProps} = this.props;
         const renderFavList =
             <ListView
+                enableEmptySections={true}
                 refreshControl={
                     <RefreshControl refreshing={listingFavs} onRefresh={this.handleRefresh} />
                 }
@@ -88,12 +101,12 @@ class FavList extends React.Component {
                 <Text>{"No Favs"}</Text>
             </View>
         ;
-        return (this.props.emptyState ? renderNoFavs : renderFavList);
+        return (this.props.emptyState) ? renderNoFavs : renderFavList;
     }
 
     handleRefresh() {
-        const {dispatch, firebase, userID} = this.props;
-        if (userID !== '')
+        const {dispatch, firebase, userID, isConnected} = this.props;
+        if (userID !== 'guest' && isConnected == true)
             dispatch(listFavs(userID,firebase));
     }
 
