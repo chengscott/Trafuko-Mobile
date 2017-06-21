@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View,Alert, BackHandler, NetInfo, AsyncStorage} from 'react-native';
+import {View, Alert, BackHandler, NetInfo, AsyncStorage} from 'react-native';
 import {persistStore} from 'redux-persist';
 import {
     TabNavigator,
@@ -96,11 +96,8 @@ const AppNavigator = StackNavigator({
         },
         title: 'Trafuko',
         headerRight: (
-            <View style={{flexDirection:'row', flexWrap:'wrap'}}>
-                <LoginButton
-                    permissions={['public_profile','email','user_friends']}
-                />
-                <Icon name='more' style={{color: '#fff', paddingRight: 25, paddingLeft: 20}} />
+            <View style={{marginRight: 10}}>
+                <LoginButton permissions={['public_profile', 'email']} />
             </View>
         ),
     }
@@ -186,7 +183,7 @@ const store = createStore(combineReducers({
 
 persistStore(store, {
     storage: AsyncStorage,
-    whitelist: ['user','navReducer']
+    whitelist: ['user']
 });
 export default class App extends React.Component {
 

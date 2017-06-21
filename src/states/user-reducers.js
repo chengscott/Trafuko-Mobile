@@ -1,14 +1,17 @@
 const initUserState = {
     isConnected: false,
-    userID: "",
-    logtxt: "登入帳號",
+    userID: '',
+    logtxt: '登入',
     disable: false
 };
 
 export function user(state = initUserState, action) {
-    switch(action.type) {
+    switch (action.type) {
         case 'persist/REHYDRATE':
-            var incoming = action.payload.user;
+            const incoming = action.payload.user;
+            if (incoming == undefined) {
+                return {...state};
+            }
             return {
                 ...state,
                 userID: incoming.userID,
@@ -32,12 +35,12 @@ export function user(state = initUserState, action) {
         case '@USER/USER_LOGIN':
             return {
                 ...state,
-                logtxt: "登出"
+                logtxt: '登出'
             };
         case '@USER/USER_LOGOUT':
             return {
                 ...state,
-                logtxt: "登入帳號"
+                logtxt: '登入'
             };
         default:
             return {...state};
