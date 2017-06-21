@@ -16,6 +16,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
+import com.react.rnspinkit.RNSpinkitPackage;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -44,7 +45,8 @@ public class MainApplication extends Application implements ReactApplication {
                 new MainReactPackage(),
                 new VectorIconsPackage(),
                 new FBSDKPackage(mCallbackManager),
-                new RCTCameraPackage()
+                new RCTCameraPackage(),
+                new RNSpinkitPackage()
             );
         }
     };

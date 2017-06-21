@@ -24,6 +24,7 @@ import CardScreen from './components/CardScreen';
 import FavScreen from './components/FavScreen';
 import CameraScreen from './components/CameraScreen';
 import LoginButton from './components/FBLoginButton';
+import LoadAnimation from './components/LoadAnimation';
 
 /* Firebase */
 
@@ -84,6 +85,10 @@ const MainNavigator = TabNavigator({
 });
 
 const AppNavigator = StackNavigator({
+    LoadAnim: {
+        screen: LoadAnimation,
+        navigationOptions: {header: null}
+    },
     Main: {screen: MainNavigator},
     Camera: {screen: CameraScreen}
 }, {
@@ -105,7 +110,7 @@ const AppNavigator = StackNavigator({
 
 // Nav reducer
 const initialNavState = AppNavigator.router.getStateForAction(
-    MainNavigator.router.getActionForPathAndParams('Card')
+    AppNavigator.router.getActionForPathAndParams('LoadAnim')
 );
 const navReducer = (state = initialNavState, action) => {
     const nextState = AppNavigator.router.getStateForAction(action, state);
