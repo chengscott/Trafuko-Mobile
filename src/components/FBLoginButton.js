@@ -21,15 +21,6 @@ class LoginButton extends React.Component {
         this.LoginFunc = this.LoginFunc.bind(this);
     }
 
-    componentDidMount() {
-        this.props.firebase.auth().onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) {
-                this.props.dispatch(login());
-                this.props.dispatch(setUserID(firebaseUser.uid));
-            }
-        });
-    }
-
     render() {
         return (
             <Icon.Button name="facebook" disabled={this.props.disable} backgroundColor="#3b5998" onPress={this.LoginFunc}>

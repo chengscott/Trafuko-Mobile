@@ -1,4 +1,4 @@
-import {fetchDataLocal} from '../api/storage';
+import {fetchDataLocal,asyncSave} from '../api/storage';
 
 /* favlist */
 
@@ -37,20 +37,40 @@ export function listFavs(favid, firebase) {
         if (isConnected === true && favid !== '') {
             dispatch(startFavList());
             Promise.all([fetchDataLocal(favid), fetchDataOnline(favid, firebase)]).then(data => {
+
                 if (data[0] !== null && data[1] !== null) {
                     let arr1 = JSON.parse(data[0]);
                     let arr2 = objToarr(data[1]);
-                    let arr3 = arrayUnique(arr1.concat(arr2));
-                    arr3 = arraySortByts(arr3);
-                    dispatch(endFavList(arr3));
+
+                    if(arr2.length > 0){
+                        let posts = arr2.map((element) => {
+                            return getFav(firebase,element.id,element.ts);
+                        });
+                        Promise.all(posts).then(result => {
+                            let arr3 = arrayUnique(arr1,result);
+                            arr3 = arraySortByts(arr3);
+                            dispatch(endFavList(arr3));
+                        });
+                    } else {
+                        arr1 = arraySortByts(arr1);
+                        dispatch(endFavList(arr1));
+                    }
                 } else if(data[0] === null && data[1] === null) {
                     dispatch(emptyFavList());
                 } else {
                     if (data[0] === null) {
                         let arr = objToarr(data[1]);
-                        arr = arraySortByts(arr);
-                        if(arr.length == 0) dispatch(emptyFavList());
-                        else dispatch(endFavList(arr));
+                        if(arr.length > 0){
+                            let posts = arr.map((element) => {
+                                return getFav(firebase,element.id,element.ts);
+                            });
+                            Promise.all(posts).then(result => {
+                                let arrFinal = arraySortByts(result);
+                                dispatch(endFavList(arrFinal));
+                            });
+                        }else {
+                            dispatch(emptyFavList());
+                        }
                     } else {
                         let arr = JSON.parse(data[0]);
                         arr = arraySortByts(arr);
@@ -90,16 +110,49 @@ function arraySortByts(array) {
     });
     return a;
 }
+function getFav(firebase,pid,favts) {
+    return firebase.database().ref('/posts/' + pid).once('value').then(snapshot => {
+        let obj = {
+            id: snapshot.val().id,
+            text: snapshot.val().text,
+            ts: favts,
+            vote: snapshot.val().vote
+        };
+        return obj;
+    }).catch(err => {
+        return err;
+    });
+}
+// function getFavList(uid, pid, ts) {
+//     this.props.firebase.ref('/posts/' + pid).once('value').then((snapshot) => {
+//         let val = snapshot.val();
+//         if (val !== null) {
+//             let obj = {
+//                 uid: uid,
+//                 id: pid,
+//                 text: val.text,
+//                 color: val.color,
+//                 ts: ts
+//             };
+//             let objs = this.state.favlist;
+//             objs.push(obj);
+//         }
+//     });
+// }
 
-function arrayUnique(array) {
-    let a = array.concat();
-    for (let i = 0; i < a.length; ++i) {
-        for (let j = i + 1; j < a.length; ++j) {
-            if (a[i] === a[j])
-                a.splice(j--, 1);
+function arrayUnique(array1, array2) {
+
+    let a = [];
+    let len1 = array1.length;
+    let len2 = array2.length;
+    for(let i = 0; i<len1; i++) {
+        for(let j = 0; j<len2; j++) {
+            if(array1[i].id !== array2[j].id) {
+                a.push(array1[i]);
+            }
         }
     }
-    return a;
+    return a.concat(array2);
 }
 
 function objToarr(obj) {

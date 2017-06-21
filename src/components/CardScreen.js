@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Dimensions, StyleSheet, View, Text} from 'react-native';
+import {Dimensions, StyleSheet, View, Text, Image, Alert} from 'react-native';
 import {Button} from 'native-base';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SwipeCards from 'react-native-swipe-cards';
+import {clearData} from '../api/storage';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -13,12 +14,15 @@ const screenHeight = Dimensions.get('window').height;
 class CardScreen extends React.Component {
 
     static propTypes = {
+        userID: PropTypes.string.isRequired,
+        firebase: PropTypes.object.isRequired,
         navigation: PropTypes.object.isRequired,
         dispatch: PropTypes.func.isRequired
     };
 
     constructor(props) {
         super(props);
+
         this.state = {
             Data: [
                 {id: "0001", text:"當你覺得自己累得跟狗一樣的時候，其實你誤會大了。狗都沒你這麼累。", vote: 23},{id:"0002", text:"玩遊戲輸了，一定是隊友的問題，要是他們夠強，我根本扯不了後腿", vote: 107},
@@ -27,9 +31,10 @@ class CardScreen extends React.Component {
                 {id: "0007", text:"凡是每天喝水的人，有高機率在100年內死去", vote: 12},{id:"0008", text:"台灣競爭力低落，在美國就連小學生都會說流利的英語", vote: 47}
             ]
         };
-        this.handleGoVR = this.handleGoVR.bind(this);
+        this.handleGoCamera = this.handleGoCamera.bind(this);
         this.handleLike = this.handleLike.bind(this);
         this.handleUnlike =this.handleUnlike.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
 
     render() {
@@ -45,8 +50,8 @@ class CardScreen extends React.Component {
                 </View>
                 <View style={styles.VRbtnBox}>
                     <View style={styles.VRbtn}>
-                        <Button rounded style={{margin: 20}}>
-                            <MIcon name="google-cardboard" size={50} color="white" />
+                        <Button rounded style={{margin: 5}}>
+                            <MIcon name="camera" size={35} color="white" />
                         </Button>
                     </View>
                 </View>
@@ -75,7 +80,7 @@ class CardScreen extends React.Component {
                 </View>
                 <View style={styles.VRbtnBox}>
                     <View style={styles.VRbtn}>
-                        <Button onPress={()=>this.handleGoVR()} rounded transparent style={{margin: 20}}>
+                        <Button onPress={()=>this.handleGoCamera()} rounded transparent style={{margin: 20}}>
                             <Text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text>
                         </Button>
                     </View>
@@ -85,24 +90,41 @@ class CardScreen extends React.Component {
     }
 
     handleLike() {
-
+        alert("like");
     }
 
     handleUnlike() {
-
+        alert("unlike");
     }
 
     onClick() {
-
+        Alert.alert(
+            '哈囉~',
+            '要收藏此則幹話嗎？',
+            [
+                {text: '取消', style: 'cancel'},
+                {text: '確認', onPress: () => clearData(this.props.userID)},
+            ]
+        );
     }
 
-    handleGoVR() {
-        this.props.navigation.navigate('VR');
+    handleGoCamera() {
+        this.props.navigation.navigate('Camera');
     }
 }
 
 class Card extends React.Component {
 
+    static propTypes = {
+        userID: PropTypes.string,
+        isConnected: PropTypes.bool,
+        text: PropTypes.string
+    };
+    constructor(props) {
+        super(props);
+
+        this.handleFav = this.handleFav.bind(this);
+    }
     render() {
         return (
             <View style={styles.card}>
@@ -118,20 +140,40 @@ class Card extends React.Component {
             </View>
         );
     }
+
+    handleFav() {
+        console.log("done");
+    }
 }
 
 class NoMoreCards extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.imageNum = Math.floor(Math.random() * 5);
+    }
+
     render() {
+        const n = this.imageNum;
         return (
-            <View style={styles.container}>
-                <Text style={styles.noMoreCardsText}>No more cards</Text>
+            <View style={styles.noMoreCards}>
+                {
+                    n == 0 ? <Image source={require('../images/0.png')} style={styles.image0} /> :
+                    n == 1 ? <Image source={require('../images/1.png')} style={styles.image1} /> :
+                    n == 2 ? <Image source={require('../images/2.png')} style={styles.image2} /> :
+                    n == 3 ? <Image source={require('../images/3.png')} style={styles.image3} /> :
+                    n == 4 ? <Image source={require('../images/4.png')} style={styles.image4} /> :
+                        <Image source={require('../images/5.png')} style={styles.image5} />
+                }
+                <Text style={styles.noMoreCardsText}>一日一幹話，醫生遠離你</Text>
             </View>
         );
     }
 }
 
-export default connect((state, ownProps) => ({
-    ...state
+export default connect((state) => ({
+    userID: state.user.userID,
+    firebase: state.fb.firebase
 }))(CardScreen);
 
 const styles = StyleSheet.create({
@@ -172,8 +214,37 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
+    noMoreCards: {
+        flex: 1,
+        alignItems: 'center',
+        paddingTop: 100
+    },
     noMoreCardsText: {
         fontSize: 22,
+    },
+    image0: {
+        width: 200,
+        height: 129
+    },
+    image1: {
+        width: 200,
+        height: 200
+    },
+    image2: {
+        width: 150,
+        height: 150
+    },
+    image3: {
+        width: 160,
+        height: 150
+    },
+    image4: {
+        width: 100,
+        height: 100
+    },
+    image5: {
+        width: 100,
+        height: 100
     },
     container: {
         height: screenHeight,
