@@ -46,8 +46,6 @@ export function listFavs(userID, firebase) {
                             return getFav(firebase,element.id,element.ts);
                         });
                         Promise.all(posts).then(result => {
-                            console.log(arr1);
-                            console.log(result);
                             let arr3 = arrayUnique(arr1,result);
                             arr3 = arraySortByts(arr3);
 

@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Dimensions, StyleSheet, View, Text, Image, Alert} from 'react-native';
+import {TouchableOpacity, Dimensions, StyleSheet, View, Text, Image, Alert} from 'react-native';
 import {Button} from 'native-base';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SwipeCards from 'react-native-swipe-cards';
-import {clearAllDataWithKey} from '../api/storage';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -112,6 +111,7 @@ class CardScreen extends React.Component {
         );
     }
 
+
     handleLike() {
         alert("like");
     }
@@ -121,16 +121,16 @@ class CardScreen extends React.Component {
     }
 
     onClick() {
-        Alert.alert(
-            '哈囉~',
-            '要收藏此則幹話嗎？',
-            [
-                {text: '取消', style: 'cancel'},
-                {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
-            ]
-        );
+        console.log("done");
     }
-
+    // Alert.alert(
+    //     '哈囉~',
+    //     '要收藏此則幹話嗎？',
+    //     [
+    //         {text: '取消', style: 'cancel'},
+    //         {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
+    //     ]
+    // );
     handleGoCamera() {
         this.props.navigation.navigate('Camera');
     }
@@ -158,8 +158,12 @@ class Card extends React.Component {
                 <View style={styles.cardBtn}>
                     <View style={styles.cardIcon}>
                         <MIcon name="crown" size={32} color="#4F8EF7" />
-                        { (true) && <FIcon onPress={this.handleFav} name="bookmark-o" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
-                        { (false) && <FIcon name="bookmark" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
+                        <TouchableOpacity onPress={this._onPressQRCode}>
+                            <View>
+                                { (true) && <FIcon onPress={this.handleFav} name="bookmark-o" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
+                                { (false) && <FIcon name="bookmark" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>

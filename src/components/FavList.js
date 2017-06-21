@@ -56,10 +56,11 @@ class FavList extends React.Component {
                 dispatch(listFavs(nextProps.userID,firebase));
             });
         }
-        const flag3 = userID !== 'guest' && nextProps.userID === 'gurst';
+        const flag3 = userID !== 'guest' && nextProps.userID === 'guest';
         const flag4 = isConnected === true && nextProps.isConnected === false;
         if(flag3 || flag4){
             firebase.database().ref('/fav/'+userID).off();
+            dispatch(listFavs(nextProps.userID,firebase));
         }
         if (favs !== nextProps.favs) {
             this.setState({
