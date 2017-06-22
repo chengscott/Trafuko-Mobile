@@ -23,26 +23,20 @@ class CameraScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleGoBack = this.handleGoBack.bind(this);
+        this.takePicture = this.takePicture.bind(this);
         this.state = {
-            text: "麻雀雖小，五臟 小次郎",
-            path: "",
+            text: '麻雀雖小，五臟 小次郎',
+            path: '',
             height: 0,
             width: 0
         };
-    }
-
-    componentDidMount() {
-
     }
 
     render() {
         return (
             <View>
                 <Camera
-                    ref={(cam) => {
-                        this.camera = cam;
-                    }}
+                    ref={(cam) => {this.camera = cam;}}
                     style={styles.preview}
                     aspect={Camera.constants.Aspect.fill}
                     captureTarget={Camera.constants.CaptureTarget.cameraRoll}
@@ -56,35 +50,12 @@ class CameraScreen extends React.Component {
                         <Text style={styles.text}>{this.state.text}</Text>
                     </View>
                     <View style={styles.captureBox}>
-                        <Icon name="camera"  onPress={this.takePicture.bind(this)} size={50} color="white" style={styles.capture}/>
+                        <Icon name="camera" onPress={this.takePicture} size={50} color="white" style={styles.capture}/>
                     </View>
                 </Camera>
             </View>
         );
     }
-    /*
-<Button title="Go back" onPress={()=>this.handleGoBack()}/>
-
-    <Camera
-      ref={(cam) => {
-        this.camera = cam;
-      }}
-      style={styles.preview}
-      aspect={Camera.constants.Aspect.fill}
-      captureTarget={Camera.constants.CaptureTarget.cameraRoll}
-      type={Camera.constants.Type.back}
-      flashMode={Camera.constants.FlashMode.auto}
-      onFocusChanged={() => {}}
-      onZoomChanged={() => {}}
-      defaultTouchToFocus
-      mirrorImage={false}>
-          <Text style={styles.text}>{this.state.text}</Text>
-          <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[click]</Text>
-     </Camera>
-
-
-
-*/
 
     takePicture() {
         const options = {};
@@ -94,10 +65,6 @@ class CameraScreen extends React.Component {
                 alert("儲存至" + data.path);
             })
             .catch(err => console.error(err));
-    }
-
-    handleGoBack() {
-        this.props.navigation.goBack();
     }
 }
 
@@ -124,9 +91,9 @@ const styles = StyleSheet.create({
     capture: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#26A69A',
         borderRadius: 40,
-        color: '#000',
+        color: '#FFF',
         width: 70,
         height: 70,
         padding: 10,
