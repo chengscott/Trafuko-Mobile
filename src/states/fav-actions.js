@@ -22,8 +22,6 @@ export function emptyFavList() {
 }
 
 function fetchDataOnline(userID, firebase) {
-    console.log(userID);
-    console.log(userID);console.log(userID);
     return firebase.database().ref('/fav/'+ userID).once('value').then( snapshot =>{
         let arr = objToarr(snapshot.val());
         return arr;
@@ -39,7 +37,6 @@ export function listFavs(userID, firebase) {
         if (isConnected === true && userID !== 'guest') {
             dispatch(startFavList());
             Promise.all([fetchDataLocal(userID), fetchDataOnline(userID, firebase)]).then(data => {
-                console.log(data);
                 if (data[0] !== null && data[1] !== null) {
                     let arr1 = JSON.parse(data[0]);
                     let arr2 = objToarr(data[1]);
@@ -49,11 +46,13 @@ export function listFavs(userID, firebase) {
                             return getFav(firebase,element.id,element.ts);
                         });
                         Promise.all(posts).then(result => {
-                            let arr3 = arrayUnique(arr1,result);
-                            arr3 = arraySortByts(arr3);
-
-                            asyncUpdate(userID,arr3).then(result => {
-                                dispatch(endFavList(arr3));
+                            arrayUniqueAndUpdate(firebase,userID,arr1,result).then(result => {
+                                let arr3 = arraySortByts(result);
+                                asyncUpdate(userID,arr3).then(result => {
+                                    dispatch(endFavList(arr3));
+                                }).catch(err => {
+                                    dispatch(emptyFavList());
+                                });
                             }).catch(err => {
                                 dispatch(emptyFavList());
                             });
@@ -135,15 +134,53 @@ function getFav(firebase,pid,favts) {
     });
 }
 
-function arrayUnique(array1, array2) {
+function updateOnline(firebase,userID,obj) {
+    return firebase.database().ref('/fav/'+userID +'/' + obj.id).set({
+        id: obj.id,
+        ts: obj.ts
+    });
+}
+function arrayUniqueAndUpdate(firebase, userID, array1, array2) {
 
-    let len1 = array1.length;
-    for(let i = 0; i<len1; i++) {
-        array2 = array2.filter((element) => {
-            return element.id !== array1[i].id;
-        });
-    }
-    return array1.concat(array2);
+    return new Promise( (resolve,reject) => {
+        let len1 = array1.length;
+        let len2 = array2.length;
+        if(len2 > len1) {
+            for(let i = 0; i<len1; i++) {
+                array2 = array2.filter((element) => {
+                    return element.id !== array1[i].id;
+                });
+            }
+            if(array2.length == 0)resolve(array1);
+            else {
+                let items = array2.map((element) => {
+                    updateOnline(firebase,userID,element);
+                });
+                Promise.all(items).then(result => {
+                    resolve(array1.concat(array2));
+                }).catch(err => {
+                    reject(err);
+                });
+            }
+        }else {
+            for(let i = 0; i<len2; i++) {
+                array1 = array1.filter((element) => {
+                    return element.id !== array2[i].id;
+                });
+            }
+            if(array1.length == 0)resolve(array2);
+            else {
+                let items = array1.map((element) => {
+                    updateOnline(firebase,userID,element);
+                });
+                Promise.all(items).then(result => {
+                    resolve(array2.concat(array1));
+                }).catch(err => {
+                    reject(err);
+                });
+            }
+        }
+    });
 }
 
 function objToarr(obj) {

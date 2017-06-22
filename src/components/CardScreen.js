@@ -57,6 +57,7 @@ class CardScreen extends React.Component {
         }
     }
     render() {
+        const {userID, firebase, isConnected} = this.props;
         return (
             <View style={{height:screenHeight, width:screenWidth}}>
                 <View style={styles.voteBtn}>
@@ -80,6 +81,9 @@ class CardScreen extends React.Component {
                         text={cardData.text}
                         key={cardData.id}
                         id={cardData.id}
+                        userID={userID}
+                        firebase={firebase}
+                        isConnected={isConnected}
                     />}
                     renderNoMoreCards={() => <NoMoreCards />}
                     showYup={false}
@@ -123,14 +127,14 @@ class CardScreen extends React.Component {
 
     onClick() {
         console.log("done");
-        Alert.alert(
-            '哈囉~',
-            '要收藏此則幹話嗎？',
-            [
-                {text: '取消', style: 'cancel'},
-                {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
-            ]
-        );
+        // Alert.alert(
+        //     '哈囉~',
+        //     '要收藏此則幹話嗎？',
+        //     [
+        //         {text: '取消', style: 'cancel'},
+        //         {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
+        //     ]
+        // );
     }
     handleGoCamera() {
         this.props.navigation.navigate('Camera');
@@ -142,13 +146,16 @@ class Card extends React.Component {
     static propTypes = {
         userID: PropTypes.string,
         isConnected: PropTypes.bool,
+        firebase: PropTypes.object,
         text: PropTypes.string
     };
     constructor(props) {
         super(props);
-
+        
+        this.state = {
+            isFav: false
+        };
         this.handleFav = this.handleFav.bind(this);
-
     }
     render() {
         return (
@@ -161,8 +168,8 @@ class Card extends React.Component {
                         <MIcon name="crown" size={32} color="#4F8EF7" />
                         <TouchableOpacity onPress={this._onPressQRCode}>
                             <View>
-                                { (true) && <FIcon onPress={this.handleFav} name="bookmark-o" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
-                                { (false) && <FIcon name="bookmark" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
+                                { (this.state.isFav === false) && <FIcon onPress={this.handleFav} name="bookmark-o" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
+                                { (this.state.isFav === true) && <FIcon name="bookmark" size={25} style={{padding:6.5, margin:0}} color="#4F8EF7" />}
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -172,7 +179,7 @@ class Card extends React.Component {
     }
 
     handleFav() {
-        alert(this.props.id + " " + this.props.text);
+        //alert(this.props.id + " " + this.props.text);
         //console.log("done");
     }
 }
