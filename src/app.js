@@ -189,7 +189,7 @@ const store = createStore(combineReducers({
 
 persistStore(store, {
     storage: AsyncStorage,
-    whitelist: ['user','fav']
+    whitelist: ['user']
 });
 export default class App extends React.Component {
 

@@ -22,6 +22,8 @@ export function emptyFavList() {
 }
 
 function fetchDataOnline(userID, firebase) {
+    console.log(userID);
+    console.log(userID);console.log(userID);
     return firebase.database().ref('/fav/'+ userID).once('value').then( snapshot =>{
         let arr = objToarr(snapshot.val());
         return arr;
@@ -37,6 +39,7 @@ export function listFavs(userID, firebase) {
         if (isConnected === true && userID !== 'guest') {
             dispatch(startFavList());
             Promise.all([fetchDataLocal(userID), fetchDataOnline(userID, firebase)]).then(data => {
+                console.log(data);
                 if (data[0] !== null && data[1] !== null) {
                     let arr1 = JSON.parse(data[0]);
                     let arr2 = objToarr(data[1]);

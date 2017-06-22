@@ -40,7 +40,12 @@ class FavList extends React.Component {
     }
 
     componentDidMount() {
-        const {dispatch,userID,firebase} = this.props;
+        const {dispatch,userID,firebase,isConnected} = this.props;
+        if(isConnected === true && userID !== 'guest') {
+            firebase.database().ref('/fav/'+ userID).on('value',function(snapshot){
+                dispatch(listFavs(userID,firebase));
+            });
+        }
         dispatch(listFavs(userID,firebase));
     }
 
@@ -51,7 +56,7 @@ class FavList extends React.Component {
         if (flag1 || flag2) {
             dispatch(listFavs(nextProps.userID,firebase));
         }
-        if((flag1 && isConnected === true) || flag2) {
+        if(flag1 && nextProps.isConnected === true) {
             firebase.database().ref('/fav/'+nextProps.userID).on('value',function(snapshot){
                 dispatch(listFavs(nextProps.userID,firebase));
             });

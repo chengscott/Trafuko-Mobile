@@ -6,6 +6,7 @@ import {Button} from 'native-base';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SwipeCards from 'react-native-swipe-cards';
+import {clearAllDataWithKey} from '../api/storage';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -122,15 +123,15 @@ class CardScreen extends React.Component {
 
     onClick() {
         console.log("done");
+        Alert.alert(
+            '哈囉~',
+            '要收藏此則幹話嗎？',
+            [
+                {text: '取消', style: 'cancel'},
+                {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
+            ]
+        );
     }
-    // Alert.alert(
-    //     '哈囉~',
-    //     '要收藏此則幹話嗎？',
-    //     [
-    //         {text: '取消', style: 'cancel'},
-    //         {text: '確認', onPress: () => clearAllDataWithKey(this.props.userID)},
-    //     ]
-    // );
     handleGoCamera() {
         this.props.navigation.navigate('Camera');
     }
