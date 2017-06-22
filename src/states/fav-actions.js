@@ -40,8 +40,7 @@ export function listFavs(userID, firebase) {
                 if (data[0] !== null && data[1] !== null) {
                     let arr1 = JSON.parse(data[0]);
                     let arr2 = objToarr(data[1]);
-
-                    if(arr2.length > 0){
+                    if(arr2 !== arr1 || arr2.length > 0){
                         let posts = arr2.map((element) => {
                             return getFav(firebase,element.id,element.ts);
                         });
@@ -83,9 +82,15 @@ export function listFavs(userID, firebase) {
                         }
                     } else {
                         let arr = JSON.parse(data[0]);
-                        arr = arraySortByts(arr);
                         if(arr.length == 0) dispatch(emptyFavList());
-                        else dispatch(endFavList(arr));
+                        else {
+                            arrayUniqueAndUpdate(firebase,userID,[],arr).then(result => {
+                                let arrFinal = arraySortByts(result);
+                                dispatch(endFavList(arrFinal));
+                            }).catch(err => {
+                                dispatch(emptyFavList());
+                            });
+                        }
                     }
                 }
             }).catch( err => {
@@ -143,6 +148,8 @@ function updateOnline(firebase,userID,obj) {
 function arrayUniqueAndUpdate(firebase, userID, array1, array2) {
 
     return new Promise( (resolve,reject) => {
+        console.log(array1);
+        console.log(array2);
         let len1 = array1.length;
         let len2 = array2.length;
         if(len2 > len1) {
