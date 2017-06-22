@@ -56,7 +56,7 @@ class FavList extends React.Component {
         if (flag1 || flag2) {
             dispatch(listFavs(nextProps.userID,firebase));
         }
-        if(flag1 && nextProps.isConnected === true) {
+        if((flag1 && nextProps.isConnected === true) || flag2) {
             firebase.database().ref('/fav/'+nextProps.userID).on('value',function(snapshot){
                 dispatch(listFavs(nextProps.userID,firebase));
             });
