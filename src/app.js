@@ -54,14 +54,14 @@ const MainNavigator = TabNavigator({
         screen: CardScreen,
         navigationOptions: {
             tabBarLabel: '幹話卡',
-            tabBarIcon: ({tintColor}) => <Icon name="albums" style={{fontSize: 25, color: tintColor}}/>,
+            tabBarIcon: ({tintColor}) => <Icon name="albums" style={{fontSize: 24, color: tintColor}}/>,
         },
     },
     Fav: {
         screen: FavScreen,
         navigationOptions: {
             tabBarLabel: '收藏',
-            tabBarIcon: ({tintColor}) => (<Icon name="bookmark" style={{fontSize: 25, color: tintColor}}/>),
+            tabBarIcon: ({tintColor}) => (<Icon name="bookmark" style={{fontSize: 24, color: tintColor}}/>),
         },
     },
 }, {
@@ -93,13 +93,14 @@ const AppNavigator = StackNavigator({
     Camera: {screen: CameraScreen}
 }, {
     navigationOptions: {
+        title: 'Trafuko',
+        headerTintColor: '#FFF',
         headerStyle: {
             backgroundColor: '#1976D2',
         },
         headerTitleStyle: {
-            color: '#fff',
+            color: '#FFF',
         },
-        title: 'Trafuko',
         headerRight: (
             <View style={{marginRight: 10}}>
                 <LoginButton permissions={['public_profile', 'email']} />

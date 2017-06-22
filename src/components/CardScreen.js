@@ -35,7 +35,7 @@ class CardScreen extends React.Component {
     componentDidMount() {
         this.setState({
             Data: [{id: "0001", text:"當你覺得自己累得跟狗一樣的時候，其實你誤會大了。狗都沒你這麼累。", vote: 23},{id:"0002", text:"玩遊戲輸了，一定是隊友的問題，要是他們夠強，我根本扯不了後腿", vote: 107},
-                {id: "0003", text:"零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二三四五六七八九零一二", vote: 23},{id:"0004", text:"研究顯示，過越多生日的人越長壽", vote: 213},
+                {id: "0003", text:"母鯊大，公鯊小 ", vote: 23},{id:"0004", text:"研究顯示，過越多生日的人越長壽", vote: 213},
                 {id: "0005", text:"在非洲，每一分鐘就有60秒過去", vote: 79},{id:"0006", text:"每個成功的男人背後，都有一條脊椎", vote: 49},
                 {id: "0007", text:"凡是每天喝水的人，有高機率在100年內死去", vote: 12},{id:"0008", text:"台灣競爭力低落，在美國就連小學生都會說流利的英語", vote: 47}]
         });
@@ -195,7 +195,9 @@ class NoMoreCards extends React.Component {
                     n == 4 ? <Image source={require('../images/4.png')} style={styles.image4} /> :
                         <Image source={require('../images/5.png')} style={styles.image5} />
                 }
-                <Text style={styles.noMoreCardsText}>一日一幹話，醫生遠離你</Text>
+                <Text style={styles.noMoreCardsText}>
+                    歐喔，你需要更多幹話{"\n"}再看一次～
+                </Text>
             </View>
         );
     }
@@ -260,6 +262,7 @@ const styles = StyleSheet.create({
     },
     noMoreCardsText: {
         fontSize: 22,
+        textAlign: 'center'
     },
     image0: {
         width: 200,
