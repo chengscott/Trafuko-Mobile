@@ -1,4 +1,5 @@
 import React from 'react';
+import {Alert} from 'react-native';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -34,7 +35,7 @@ class LoginButton extends React.Component {
             this.props.dispatch(setBtnDisable(true));
             LoginManager.logInWithReadPermissions(this.props.permissions).then(result => {
                 if (result.isCancelled) {
-                    alert('Login cancelled');
+                    Alert.alert('Trafuko', '登入取消QQ');
                     this.props.dispatch(setBtnDisable(false));
                 } else {
                     AccessToken.getCurrentAccessToken().then(data => {
@@ -44,7 +45,7 @@ class LoginButton extends React.Component {
                             this.props.dispatch(setUserID(result.uid));
                             this.props.dispatch(setBtnDisable(false));
                             this.props.dispatch(login());
-                            alert("success");
+                            Alert.alert('登入成功', '可以開始同步幹話了～');
                         }).catch(error => {
                             // The firebase.auth.AuthCredential type that was used.
                             const errInfo = {
@@ -54,13 +55,13 @@ class LoginButton extends React.Component {
                                 credential: error.credential
                             };
                             this.props.dispatch(setBtnDisable(false));
-                            console.log(errInfo);
-                            alert("error");
+                            // console.log(errInfo);
+                            Alert.alert('Trafuko', '登入失敗TAT');
                         });
                     });
                 }
             }, error => {
-                alert('Login fail with error: ' + error);
+                Alert.alert('Trafuko', '登入錯誤QAQ\n請回報訊息：\n' + error);
                 this.props.dispatch(setBtnDisable(false));
             });
         } else {
@@ -69,7 +70,6 @@ class LoginButton extends React.Component {
             this.props.dispatch(setUserID('guest'));
         }
     }
-
 }
 
 export default connect((state) => ({
