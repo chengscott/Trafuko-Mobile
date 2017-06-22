@@ -3,7 +3,8 @@ import {
     Dimensions,
     StyleSheet,
     Text,
-    View
+    View,
+    Share
 } from 'react-native';
 import Camera from 'react-native-camera';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -62,7 +63,20 @@ class CameraScreen extends React.Component {
         //options.location = ...
         this.camera.capture({metadata: options})
             .then((data) => {
-                alert("儲存至" + data.path);
+                Share.share({
+                  message: '麻雀雖小，五臟 小次郎',
+                  title: 'Best title ever!',
+                  url: 'http://codingmiles.com'
+                }, {
+                  dialogTitle: '分享幹話給朋友!!',
+                  excludedActivityTypes: [
+                    'com.apple.UIKit.activity.PostToTwitter',
+                    'com.apple.uikit.activity.mail'
+                  ],
+                  tintColor: 'green'
+                })
+                .then(this._showResult)
+                .catch(err => console.log(err))
             })
             .catch(err => console.error(err));
     }
