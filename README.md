@@ -7,27 +7,56 @@
 
 ![](/metadata/logo.png)
 
-## Features
+# Features
+
+## App
+
 0. 載入動畫
+
 ![](/metadata/loading.gif)
+
 1. 智慧幹話卡
+
 ![](/metadata/cards.gif)
+
 2. 整合雲端幹話收藏
+
 ![](/metadata/fav.jpeg)
+
 3. 一鍵登入 FB 帳號
+
 ![](/metadata/login.gif)
+
 4. 幹話相機
+
 ![](/metadata/camera.jpeg)
 
-## Machine Learning
+
+## 幹話推薦 Machine Learning
+
+1. Preprocess Text
+2. N-Gram
+3. Extract Feature
+4. Multiclass Decision Forest
 
 ![](/metadata/ml.png)
 
-## Contributing
+## 拍照幹話 Deep Learning
+###### TODO: Not Implemented
 
-Since the course has ended, the original development team may NOT involve with the program, but future releases will probably be geared more towards bug-fixes rather than addition of new features.
+- Train: MS COCO dataset
+    - Image → CNN
+    - Sentence → RNN
+- 照片
+    - Image → CNN
+- 幹話 Cluster
+    - Sentence → RNN
 
-More contributing guides should be referred to our Wiki. Thanks for your participation!
+# Development
+
+## Data Flow
+
+![](/metadata/data.png)
 
 ## Prerequisites
 
@@ -61,6 +90,12 @@ yarn jest
 ```bash
 yarn lint
 ```
+
+# Contributing
+
+Since the course has ended, the original development team may **NOT** involve with the program, but future releases will probably be geared more towards bug-fixes rather than addition of new features.
+
+More contributing guides should be referred to our Wiki. Thanks for your participation!
 
 # Workflow
 
