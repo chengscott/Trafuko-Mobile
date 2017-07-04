@@ -1,14 +1,21 @@
 ### Software Studio
 # Trafuko | 垃圾話
+[![Maintenance](https://img.shields.io/maintenance/yes/2017.svg)]()
 [![gradle](https://img.shields.io/badge/gradle-1.2.3-orange.svg)](https://gradle.org/)
 [![android-sdk](https://img.shields.io/badge/android%20sdk-24-brightgreen.svg)](https://developer.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-##### Warning: &nbsp;The project now is stopped to develop
-# Fecture
-1. 幹話卡片滑動系統，只需一指完成喜惡選擇(尚未完成
-2. 基礎幹畫收藏列表
-3. 整合FB與Firebase進行帳戶管理
-4. 幹話相機(尚未完成
+
+## Features
+1. 智慧幹話卡
+2. 整合雲端幹話收藏
+3. 一鍵登入 FB 帳號
+4. 幹話相機
+
+## Contributing
+
+Since the course has ended, the original development team may NOT involve with the program, but future releases will probably be geared more towards bug-fixes rather than addition of new features.
+
+More contributing guides should be referred to our Wiki. Thanks for your participation!
 
 ## Prerequisites
 
@@ -61,8 +68,4 @@ yarn lint
     - Resolve merge conflict (may commit again)
     - ```git push```
     - (Workspace is clean now!)
-    
-# Expected
-* Integrate with maching learning to analyze users trash talk
-* Finish the trash talk camera
-* Finish the slide card system
+
