@@ -5,11 +5,23 @@
 [![android-sdk](https://img.shields.io/badge/android%20sdk-24-brightgreen.svg)](https://developer.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+![](/metadata/logo.png)
+
 ## Features
+0. 載入動畫
+![](/metadata/loading.gif)
 1. 智慧幹話卡
+![](/metadata/cards.gif)
 2. 整合雲端幹話收藏
+![](/metadata/fav.jpeg)
 3. 一鍵登入 FB 帳號
+![](/metadata/login.gif)
 4. 幹話相機
+![](/metadata/camera.jpeg)
+
+## Machine Learning
+
+![](/metadata/ml.png)
 
 ## Contributing
 
