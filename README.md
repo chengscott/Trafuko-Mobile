@@ -21,7 +21,7 @@
 
 2. 整合雲端幹話收藏
 
-![](/metadata/fav.jpeg)
+![](/metadata/fav.png)
 
 3. 一鍵登入 FB 帳號
 
@@ -29,7 +29,7 @@
 
 4. 幹話相機
 
-![](/metadata/camera.jpeg)
+![](/metadata/camera.png)
 
 
 ## 幹話推薦 Machine Learning
